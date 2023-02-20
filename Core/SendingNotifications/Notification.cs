@@ -1,6 +1,8 @@
-﻿namespace Core.FailedNotifications;
+﻿using Core.SendingNotifications.Types;
 
-public class FailedNotification
+namespace Core.SendingNotifications;
+
+public class Notification
 {
     public Guid Id { get; set; }
 
@@ -13,6 +15,8 @@ public class FailedNotification
     public string ProviderType { get; set; }
 
     public Guid ProviderId { get; set; }
+    
+    public NotificationStatus Status { get; set; }
 
     public DateTime CreatedDateUtc { get; } = DateTime.UtcNow;
 }

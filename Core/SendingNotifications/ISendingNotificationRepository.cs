@@ -1,12 +1,12 @@
 ﻿namespace Core.SendingNotifications;
 
-public interface ISendingNotificationRepository
+public interface INotificationRepository
 {
-    Task AddAsync(SendingNotification entity, CancellationToken cancellationToken = default);
+    Task AddAsync(Notification entity, CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(SendingNotification entity, CancellationToken cancellationToken = default);
+    Task UpdateAsync(Notification entity, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(SendingNotification entity, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Notification entity, CancellationToken cancellationToken = default);
 
-    Task<SendingNotification?> FindAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Notification?> FindAsync(Guid id, CancellationToken cancellationToken = default);
 }

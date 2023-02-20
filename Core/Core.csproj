@@ -10,8 +10,4 @@
         <PackageReference Include="DotNetCore.CAP" Version="7.0.1" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="FailedNotifications\Exceptions" />
-    </ItemGroup>
-
 </Project>
