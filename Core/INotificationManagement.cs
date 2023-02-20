@@ -1,6 +1,6 @@
 ﻿namespace Core;
 
-public interface INotificationService
+public interface INotificationManagement
 {
     Task SendAsync(SendNotificationRequest req, CancellationToken cancellationToken = default);
 }
