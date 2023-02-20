@@ -22,7 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\Quries\Quries.csproj" />
+      <ProjectReference Include="..\Queries\Quries.csproj" />
     </ItemGroup>
 
 </Project>
