@@ -32,7 +32,7 @@ public class NotificationService : INotificationService
         var sendingNotification = await _notificationRepository.FindAsync(req.Id, cancellationToken);
         if (sendingNotification is null)
         {
-            throw new SendingNotificationNotFoundException();
+            throw new NotificationNotFoundException();
         }
 
         await _notificationRepository.DeleteAsync(sendingNotification, cancellationToken);

@@ -1,17 +1,14 @@
 ﻿using Core.Providers.Exceptions;
-using DotNetCore.CAP;
 
 namespace Core.Providers.Services;
 
 public class ProviderService : IProviderService
 {
     private readonly IProviderRepository _providerRepository;
-    private readonly ICapPublisher _capPublisher;
 
-    public ProviderService(IProviderRepository accountRepository, ICapPublisher capPublisher)
+    public ProviderService(IProviderRepository accountRepository)
     {
         _providerRepository = accountRepository;
-        _capPublisher = capPublisher;
     }
 
 

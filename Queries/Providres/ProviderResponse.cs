@@ -2,13 +2,15 @@
 
 public class ProviderResponse
 {
-    public Guid Id { get; internal set; }
+    public Guid Id { get; set; }
 
-    public string Name { get; internal set; }
+    public string Name { get; set; }
 
     public string Type { get; set; }
 
+    public string Status { get; set; }
+    
     public Dictionary<string, string> Metas { get; set; }
 
-    public DateTime CreatedDateUtc { get; } = DateTime.UtcNow;
+    public DateTime CreatedDateUtc { get; }
 }
