@@ -7,4 +7,5 @@ public interface IProviderService
     Task UpdateAsync(UpdateProviderRequest req, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(DeleteProviderRequest req, CancellationToken cancellationToken = default);
+   
 }

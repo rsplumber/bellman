@@ -1,4 +1,4 @@
-namespace Core.SendingNotifications.Exceptions;
+namespace Core.Notifications.Exceptions;
 
 public class SendingNotificationNotFoundException : ApplicationException
 {

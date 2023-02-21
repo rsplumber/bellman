@@ -9,4 +9,6 @@ public interface IProviderRepository
     Task DeleteAsync(Provider entity, CancellationToken cancellationToken = default);
 
     Task<Provider?> FindAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<List<Provider?>> FindAsync(string type, CancellationToken cancellationToken = default);
 }

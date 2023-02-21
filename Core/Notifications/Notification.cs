@@ -1,6 +1,6 @@
-﻿using Core.SendingNotifications.Types;
+﻿using Core.Notifications.Types;
 
-namespace Core.SendingNotifications;
+namespace Core.Notifications;
 
 public class Notification
 {
@@ -12,7 +12,7 @@ public class Notification
 
     public string To { get; set; }
 
-    public string ProviderType { get; set; }
+    public string Type { get; set; }
 
     public Guid ProviderId { get; set; }
     

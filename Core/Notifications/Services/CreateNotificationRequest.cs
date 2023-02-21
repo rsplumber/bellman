@@ -1,6 +1,6 @@
-﻿using Core.SendingNotifications.Types;
+﻿using Core.Notifications.Types;
 
-namespace Core.SendingNotifications.Services;
+namespace Core.Notifications.Services;
 
 public sealed record CreateNotificationRequest
 {

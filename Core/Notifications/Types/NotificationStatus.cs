@@ -1,4 +1,4 @@
-﻿namespace Core.SendingNotifications.Types;
+﻿namespace Core.Notifications.Types;
 
 public enum NotificationStatus
 {

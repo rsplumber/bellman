@@ -1,5 +1,5 @@
-﻿using Core.Providers.Services;
-using Core.SendingNotifications.Services;
+﻿using Core.Notifications.Services;
+using Core.Providers.Services;
 using Savorboard.CAP.InMemoryMessageQueue;
 
 namespace Application;

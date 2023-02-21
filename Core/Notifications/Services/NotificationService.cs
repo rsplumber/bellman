@@ -1,6 +1,6 @@
-﻿using Core.SendingNotifications.Exceptions;
+﻿using Core.Notifications.Exceptions;
 
-namespace Core.SendingNotifications.Services;
+namespace Core.Notifications.Services;
 
 public class NotificationService : INotificationService
 {
@@ -19,7 +19,7 @@ public class NotificationService : INotificationService
             Content = req.Content,
             From = req.From,
             To = req.To,
-            ProviderType = req.ProviderType,
+            Type = req.ProviderType,
             ProviderId = req.ProviderId,
             Status = req.Status
         };

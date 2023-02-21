@@ -6,5 +6,5 @@ public record SendNotificationRequest()
 
     public string To { get; set; }
 
-    public string ProviderType { get; set; }
+    public string Type { get; set; }
 }

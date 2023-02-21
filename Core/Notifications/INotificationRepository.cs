@@ -1,4 +1,4 @@
-﻿namespace Core.SendingNotifications;
+﻿namespace Core.Notifications;
 
 public interface INotificationRepository
 {
