@@ -13,5 +13,5 @@ public class Provider
     public ProviderStatus Status { get; set; } = ProviderStatus.Disable;
     public Dictionary<string, string> Metas { get; set; }
 
-    public DateTime CreatedDateUtc { get; } = DateTime.UtcNow;
+    public DateTime CreatedDateUtc { get; set; } = DateTime.UtcNow;
 }

@@ -15,8 +15,8 @@ public class Notification
     public string Type { get; set; }
 
     public Guid ProviderId { get; set; }
-    
+
     public NotificationStatus Status { get; set; }
 
-    public DateTime CreatedDateUtc { get; } = DateTime.UtcNow;
+    public DateTime CreatedDateUtc { get; internal set; } = DateTime.UtcNow;
 }

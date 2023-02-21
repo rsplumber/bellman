@@ -22,6 +22,8 @@ builder.Services.AddNotificationService(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseNotificationCenter(builder.Configuration);
+
 app.UseCors(b => b.AllowAnyHeader()
     .AllowAnyMethod()
     .SetIsOriginAllowed(_ => true)
