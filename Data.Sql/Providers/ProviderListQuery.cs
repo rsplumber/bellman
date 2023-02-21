@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Quries.Providres;
+using Queries.Providres;
 
 namespace Data.Sql.Providers;
 

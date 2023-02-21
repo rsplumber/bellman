@@ -1,4 +1,4 @@
-﻿namespace Quries.Providres;
+﻿namespace Queries.Providres;
 
 public interface IProviderDetailsQuery
 {

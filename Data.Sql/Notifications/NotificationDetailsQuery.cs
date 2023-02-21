@@ -1,6 +1,6 @@
 ﻿using Core.Notifications.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Quries.Notifications;
+using Queries.Notifications;
 
 namespace Data.Sql.Notifications;
 

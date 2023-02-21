@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{7BC4B1F2-5D48-426E-B46A-17307E15208D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quries", "Queries\Quries.csproj", "{82042C8A-A972-491F-8145-9CCB2D1BBBE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Queries", "Queries\Queries.csproj", "{82042C8A-A972-491F-8145-9CCB2D1BBBE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Sql", "Data.Sql\Data.Sql.csproj", "{BEEC0CFE-58C5-41A4-9E1C-4763FBBFAD4D}"
 EndProject

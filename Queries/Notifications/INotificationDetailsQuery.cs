@@ -1,4 +1,4 @@
-namespace Quries.Notifications;
+namespace Queries.Notifications;
 
 public interface INotificationDetailsQuery
 {

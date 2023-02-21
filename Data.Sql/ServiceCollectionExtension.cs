@@ -5,8 +5,8 @@ using Data.Sql.Providers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Quries.Notifications;
-using Quries.Providres;
+using Queries.Notifications;
+using Queries.Providres;
 using NotificationRepository = Core.Notifications.NotificationRepository;
 
 namespace Data.Sql;
