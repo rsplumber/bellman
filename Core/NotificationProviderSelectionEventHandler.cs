@@ -1,5 +1,4 @@
 ﻿using Core.Providers;
-using Core.Providers.Exceptions;
 using DotNetCore.CAP;
 
 namespace Core;
@@ -18,18 +17,23 @@ public class NotificationProviderSelectionEventHandler : ICapSubscribe
     [CapSubscribe(NotificationProviderSelectionEvent.EventName)]
     public async Task HandleAsync(NotificationProviderSelectionEvent message)
     {
-        var provider = (await _providerRepository.FindAsync(message.Type)).FirstOrDefault();
-        if (provider is null)
+        // var provider = (await _providerRepository.FindAsync(message.Type)).FirstOrDefault();
+        var pro = new Provider()
         {
-            throw new ProviderNotFoundException();
-        }
+            Id = new Guid(),
+            Type = "sms",
+            Name = "fake",
+        };
+        // if (provider is null)
+        // {
+        //     throw new ProviderNotFoundException();
+        // }
 
-        await _capPublisher.PublishAsync(NotificationSendEvent.EventName, new NotificationSendEvent
+        await _capPublisher.PublishAsync(NotificationSendEvent.EventName + "_" + pro.Name, new NotificationSendEvent
         {
             Content = message.Content,
             To = message.To,
             Type = message.Type,
-            ProviderId = provider.Id
         });
     }
 }

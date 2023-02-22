@@ -6,7 +6,7 @@ public class Provider
 {
     public Guid Id { get; internal set; }
 
-    public string Name { get; internal set; }
+    public string Name { get; set; }
 
     public string Type { get; set; }
 

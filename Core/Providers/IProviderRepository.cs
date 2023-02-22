@@ -10,5 +10,5 @@ public interface IProviderRepository
 
     Task<Provider?> FindAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<List<Provider?>> FindAsync(string type, CancellationToken cancellationToken = default);
+    Task<List<Provider>> FindAsync(string type, CancellationToken cancellationToken = default);
 }

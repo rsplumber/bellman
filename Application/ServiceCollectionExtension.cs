@@ -3,6 +3,7 @@ using Core.Notifications.Services;
 using Core.Providers.Services;
 using Data.Sql;
 using Savorboard.CAP.InMemoryMessageQueue;
+using Sms.Fake;
 
 namespace Application;
 
@@ -12,7 +13,6 @@ internal static class ServiceCollectionExtension
     {
         services.AddData(configuration);
         services.AddScoped<INotificationService, NotificationService>();
-        services.AddScoped<IProviderService, ProviderService>();
         services.AddScoped<INotificationManagement, NotificationManagement>();
 
         services.AddCap(x =>
@@ -21,5 +21,9 @@ internal static class ServiceCollectionExtension
             x.UseInMemoryStorage();
             x.UseDashboard();
         });
+
+        services.AddScoped<NotificationProviderSelectionEventHandler>();
+        services.AddScoped<NotificationSendEventHandler>();
+        services.AddFakeSms(configuration);
     }
 }

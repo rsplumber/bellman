@@ -1,31 +1,44 @@
 ﻿using Core.Providers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Sql.Providers;
 
 public class ProviderRepository : IProviderRepository
 {
-    public Task AddAsync(Provider entity, CancellationToken cancellationToken = default)
+    private readonly NotificationCenterDbContext _dbContext;
+
+    public ProviderRepository(NotificationCenterDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
     }
 
-    public Task UpdateAsync(Provider entity, CancellationToken cancellationToken = default)
+    public async Task AddAsync(Provider entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _dbContext.Providers.AddAsync(entity, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public Task DeleteAsync(Provider entity, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Provider entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        _dbContext.Providers.Update(entity);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<Provider?> FindAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Provider entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        _dbContext.Providers.Remove(entity);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<List<Provider?>> FindAsync(string type, CancellationToken cancellationToken = default)
+    public async Task<Provider?> FindAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Providers
+            .FirstOrDefaultAsync(provider => provider.Id == id, cancellationToken: cancellationToken);
+    }
+
+    public async Task<List<Provider>> FindAsync(string type, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.Providers.Select(provider => provider)
+            .Where(provider => provider.Type == type).ToListAsync(cancellationToken: cancellationToken);
     }
 }
