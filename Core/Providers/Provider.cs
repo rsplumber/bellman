@@ -1,4 +1,5 @@
-﻿using Core.Providers.Types;
+﻿using Core.Providers.Exceptions;
+using Core.Providers.Types;
 
 namespace Core.Providers;
 
@@ -22,6 +23,11 @@ public class ProviderCollection : IProviderCollection
 
     public void Add(Provider provider)
     {
+        if (_providers.Any(p => p.Name == provider.Name))
+        {
+            throw new ProviderNameExistsException();
+        }
+
         _providers.Add(provider);
     }
 }
@@ -34,5 +40,4 @@ public class Provider
 
     public ProviderStatus Status { get; set; } = ProviderStatus.Disable;
     public Dictionary<string, string>? Metas { get; set; }
-
 }
