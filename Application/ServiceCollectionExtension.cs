@@ -22,7 +22,7 @@ internal static class ServiceCollectionExtension
             x.UseDashboard();
         });
 
-        services.AddScoped<NotificationProviderSelectionEventHandler>();
+        services.AddScoped<ProviderSelectionEventHandler>();
         services.AddScoped<NotificationSendEventHandler>();
         services.AddFakeSms(configuration);
     }

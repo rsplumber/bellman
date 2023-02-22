@@ -3,6 +3,7 @@ using Core.Providers;
 using DotNetCore.CAP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 
 namespace Data.Sql;
 
@@ -56,6 +57,10 @@ public class NotificationCenterDbContext : DbContext
             builder.Property(provider => provider.Metas)
                 .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasColumnName("metas");
+
+            builder.Property(provider => provider.Metas)
+                .HasConversion(v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<Dictionary<string, string>>(v));
         }
     }
 

@@ -13,7 +13,7 @@ public class NotificationManagement : INotificationManagement
 
     public async Task SendAsync(SendNotificationRequest req, CancellationToken cancellationToken = default)
     {
-        await _capPublisher.PublishAsync(NotificationProviderSelectionEvent.EventName, new NotificationProviderSelectionEvent
+        await _capPublisher.PublishAsync(ProviderSelectionEvent.EventName, new ProviderSelectionEvent
         {
             Content = req.Content,
             Type = req.Type,

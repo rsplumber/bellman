@@ -1,6 +1,6 @@
 ﻿namespace Core;
 
-public class NotificationProviderSelectionEvent
+public class ProviderSelectionEvent
 {
     public const string EventName = "provider_selection";
     

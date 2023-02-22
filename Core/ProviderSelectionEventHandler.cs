@@ -3,19 +3,19 @@ using DotNetCore.CAP;
 
 namespace Core;
 
-public class NotificationProviderSelectionEventHandler : ICapSubscribe
+public class ProviderSelectionEventHandler : ICapSubscribe
 {
     private readonly IProviderRepository _providerRepository;
     private readonly ICapPublisher _capPublisher;
 
-    public NotificationProviderSelectionEventHandler(IProviderRepository providerRepository, ICapPublisher capPublisher)
+    public ProviderSelectionEventHandler(IProviderRepository providerRepository, ICapPublisher capPublisher)
     {
         _providerRepository = providerRepository;
         _capPublisher = capPublisher;
     }
 
-    [CapSubscribe(NotificationProviderSelectionEvent.EventName)]
-    public async Task HandleAsync(NotificationProviderSelectionEvent message)
+    [CapSubscribe(ProviderSelectionEvent.EventName)]
+    public async Task HandleAsync(ProviderSelectionEvent message)
     {
         // var provider = (await _providerRepository.FindAsync(message.Type)).FirstOrDefault();
         var pro = new Provider()
