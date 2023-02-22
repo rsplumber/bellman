@@ -14,14 +14,13 @@ public static class ApplicationBuilderExtension
         if (serviceScope == null) return;
         try
         {
-            var repository = serviceScope.ServiceProvider.GetRequiredService<IProviderRepository>();
-            repository.AddAsync(new Provider()
+            var repository = serviceScope.ServiceProvider.GetRequiredService<IProviderCollection>();
+            repository.Add(new Provider()
             {
                 Name = "fake",
                 Type = "sms",
                 Status = ProviderStatus.Enable,
-
-            }).Wait();
+            });
         }
         catch (Exception)
         {

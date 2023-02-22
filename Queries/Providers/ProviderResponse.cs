@@ -1,4 +1,4 @@
-﻿namespace Queries.Providres;
+﻿namespace Queries.Providers;
 
 public class ProviderResponse
 {
@@ -9,8 +9,7 @@ public class ProviderResponse
     public string Type { get; set; }
 
     public string Status { get; set; }
-    
-    public Dictionary<string, string> Metas { get; set; }
 
-    public DateTime CreatedDateUtc { get; }
+    public Dictionary<string, string>? Metas { get; set; }
+
 }

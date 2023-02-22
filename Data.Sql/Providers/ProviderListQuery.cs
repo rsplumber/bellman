@@ -1,28 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Queries.Providres;
+﻿using Core.Providers;
+using Queries.Providers;
 
 namespace Data.Sql.Providers;
 
 internal sealed class ProviderListQuery : IProviderListQuery
 {
-    private readonly NotificationCenterDbContext _dbContext;
+    private readonly IProviderCollection _providerCollection;
 
-    public ProviderListQuery(NotificationCenterDbContext dbContext)
+    public ProviderListQuery(IProviderCollection providerCollection)
     {
-        _dbContext = dbContext;
+        _providerCollection = providerCollection;
     }
 
-    public async Task<List<ProviderResponse>> QueryAsync(CancellationToken cancellationToken = default)
+    public Task<List<ProviderResponse>> QueryAsync(CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Providers
+        return Task.FromResult(_providerCollection.Providers
             .Select(provider => new ProviderResponse
             {
-                Id = provider.Id,
                 Name = provider.Name,
                 Type = provider.Type,
                 Status = provider.Status.ToString(),
                 Metas = provider.Metas
-            })
-            .ToListAsync(cancellationToken: cancellationToken);
+            }).ToList());
     }
 }

@@ -5,12 +5,10 @@ namespace Core;
 
 public class ProviderSelectionEventHandler : ICapSubscribe
 {
-    private readonly IProviderRepository _providerRepository;
     private readonly ICapPublisher _capPublisher;
 
-    public ProviderSelectionEventHandler(IProviderRepository providerRepository, ICapPublisher capPublisher)
+    public ProviderSelectionEventHandler(ICapPublisher capPublisher)
     {
-        _providerRepository = providerRepository;
         _capPublisher = capPublisher;
     }
 
@@ -20,7 +18,6 @@ public class ProviderSelectionEventHandler : ICapSubscribe
         // var provider = (await _providerRepository.FindAsync(message.Type)).FirstOrDefault();
         var pro = new Provider()
         {
-            Id = new Guid(),
             Type = "sms",
             Name = "fake",
         };

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Queries.Notifications;
-using Queries.Providres;
+using Queries.Providers;
 using NotificationRepository = Core.Notifications.NotificationRepository;
 
 namespace Data.Sql;
@@ -17,7 +17,6 @@ public static class ServiceCollectionExtension
     {
         services.AddDbContext<NotificationCenterDbContext>(
             builder => builder.UseNpgsql(configuration.GetConnectionString("Default")));
-        services.AddScoped<IProviderRepository, ProviderRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
 
         //Queries

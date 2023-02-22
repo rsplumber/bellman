@@ -1,9 +1,7 @@
 ﻿using Core.Notifications;
-using Core.Providers;
 using DotNetCore.CAP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 
 namespace Data.Sql;
 
@@ -16,53 +14,15 @@ public class NotificationCenterDbContext : DbContext
         _eventBus = eventBus;
     }
 
-    public DbSet<Provider> Providers { get; set; }
 
     public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfiguration(new ProviderEntityTypeConfiguration());
         builder.ApplyConfiguration(new NotificationEntityTypeConfiguration());
         base.OnModelCreating(builder);
     }
 
-    private class ProviderEntityTypeConfiguration : IEntityTypeConfiguration<Provider>
-    {
-        public void Configure(EntityTypeBuilder<Provider> builder)
-        {
-            builder.ToTable("providers")
-                .HasKey(provider => provider.Id);
-
-            builder.Property(provider => provider.Id)
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
-                .HasColumnName("id");
-
-            builder.Property(provider => provider.Name)
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
-                .HasColumnName("name");
-
-            builder.Property(provider => provider.Type)
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
-                .HasColumnName("type");
-
-            builder.Property(provider => provider.Status)
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
-                .HasColumnName("status");
-
-            builder.Property(provider => provider.CreatedDateUtc)
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
-                .HasColumnName("created_date_utc");
-
-            builder.Property(provider => provider.Metas)
-                .UsePropertyAccessMode(PropertyAccessMode.Property)
-                .HasColumnName("metas");
-
-            builder.Property(provider => provider.Metas)
-                .HasConversion(v => JsonConvert.SerializeObject(v),
-                    v => JsonConvert.DeserializeObject<Dictionary<string, string>>(v));
-        }
-    }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

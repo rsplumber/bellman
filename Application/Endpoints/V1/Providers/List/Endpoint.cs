@@ -1,5 +1,5 @@
 using FastEndpoints;
-using Queries.Providres;
+using Queries.Providers;
 
 namespace Application.Endpoints.V1.Providers.List;
 

@@ -1,4 +1,4 @@
-﻿namespace Queries.Providres;
+﻿namespace Queries.Providers;
 
 public interface IProviderListQuery
 {

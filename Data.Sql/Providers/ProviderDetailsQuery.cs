@@ -1,22 +1,22 @@
-﻿using Core.Providers.Exceptions;
-using Microsoft.EntityFrameworkCore;
-using Queries.Providres;
+﻿using Core.Providers;
+using Core.Providers.Exceptions;
+using Queries.Providers;
 
 namespace Data.Sql.Providers;
 
 internal sealed class ProviderDetailsQuery : IProviderDetailsQuery
 {
-    private readonly NotificationCenterDbContext _dbContext;
+    private readonly IProviderCollection _providerCollection;
 
-    public ProviderDetailsQuery(NotificationCenterDbContext dbContext)
+    public ProviderDetailsQuery(IProviderCollection providerCollection)
     {
-        _dbContext = dbContext;
+        _providerCollection = providerCollection;
     }
 
-    public async Task<ProviderResponse> QueryAsync(Guid id, CancellationToken cancellationToken = default)
+    public Task<ProviderResponse> QueryAsync(string name, CancellationToken cancellationToken = default)
     {
-        var provider = await _dbContext.Providers
-            .FirstOrDefaultAsync(model => model.Id == id, cancellationToken);
+        var provider = _providerCollection.Providers
+            .FirstOrDefault(model => model.Name == name);
 
         if (provider is null)
         {
@@ -24,13 +24,12 @@ internal sealed class ProviderDetailsQuery : IProviderDetailsQuery
         }
 
 
-        return new()
+        return Task.FromResult(new ProviderResponse
         {
-            Id = provider.Id,
             Name = provider.Name,
             Type = provider.Type,
             Status = provider.Status.ToString(),
-            Metas = provider.Metas
-        };
+            Metas = provider.Metas,
+        });
     }
 }

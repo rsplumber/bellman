@@ -2,10 +2,32 @@
 
 namespace Core.Providers;
 
+public interface IProviderCollection
+{
+    IReadOnlyList<Provider> Providers { get; }
+
+    void Add(Provider provider);
+}
+
+public class ProviderCollection : IProviderCollection
+{
+    private readonly List<Provider> _providers;
+
+    public ProviderCollection()
+    {
+        _providers = new List<Provider>();
+    }
+
+    public IReadOnlyList<Provider> Providers => _providers;
+
+    public void Add(Provider provider)
+    {
+        _providers.Add(provider);
+    }
+}
+
 public class Provider
 {
-    public Guid Id { get; internal set; }
-
     public string Name { get; set; }
 
     public string Type { get; set; }
@@ -13,5 +35,4 @@ public class Provider
     public ProviderStatus Status { get; set; } = ProviderStatus.Disable;
     public Dictionary<string, string>? Metas { get; set; }
 
-    public DateTime CreatedDateUtc { get; set; } = DateTime.UtcNow;
 }

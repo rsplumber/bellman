@@ -1,5 +1,5 @@
 using FastEndpoints;
-using Queries.Providres;
+using Queries.Providers;
 
 namespace Application.Endpoints.V1.Providers.Detail;
 
@@ -21,7 +21,7 @@ internal sealed class Endpoint : Endpoint<Request, ProviderResponse>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var response = await _providerDetailsQuery.QueryAsync(req.Id, ct);
+        var response = await _providerDetailsQuery.QueryAsync(req.Name, ct);
         await SendOkAsync(response, ct);
     }
 }
@@ -38,5 +38,5 @@ internal sealed class EndpointSummary : Summary<Endpoint>
 
 internal sealed record Request
 {
-    public Guid Id { get; set; }
+    public string Name { get; set; }
 }
