@@ -14,7 +14,7 @@ internal sealed class Endpoint : Endpoint<Request, ProviderResponse>
 
     public override void Configure()
     {
-        Get("providers/{id}");
+        Get("providers/{name}");
         AllowAnonymous();
         Version(1);
     }

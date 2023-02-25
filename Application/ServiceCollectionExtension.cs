@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.Notifications.Services;
 using Data.Sql;
+using Email.Fake;
 using Savorboard.CAP.InMemoryMessageQueue;
 using Sms.Fake;
 using Sms.Fake2;
@@ -24,5 +25,6 @@ internal static class ServiceCollectionExtension
         services.AddCore(configuration);
         services.AddFakeSms(configuration);
         services.AddFakeSms2(configuration);
+        services.AddFakeEmail(configuration);
     }
 }
