@@ -1,26 +1,27 @@
-﻿using Core.Providers;
+﻿using Core;
+using Core.NotificationManagements;
 using Queries.Providers;
 
 namespace Data.Sql.Providers;
 
 internal sealed class ProviderListQuery : IProviderListQuery
 {
-    private readonly IProviderCollection _providerCollection;
+    private readonly IEnumerable<AbstractNotificationManagement> _notificationManagements;
 
-    public ProviderListQuery(IProviderCollection providerCollection)
+
+    public ProviderListQuery(IEnumerable<AbstractNotificationManagement> notificationManagements)
     {
-        _providerCollection = providerCollection;
+        _notificationManagements = notificationManagements;
     }
 
     public Task<List<ProviderResponse>> QueryAsync(CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(_providerCollection.Providers
+        return Task.FromResult(_notificationManagements
             .Select(provider => new ProviderResponse
             {
-                Name = provider.Name,
-                Type = provider.Type,
+                Name = provider.ProviderName,
+                Type = provider.ProviderType,
                 Status = provider.Status.ToString(),
-                Metas = provider.Metas
             }).ToList());
     }
 }

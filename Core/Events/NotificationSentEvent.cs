@@ -1,4 +1,4 @@
-﻿namespace Core;
+﻿namespace Core.Events;
 
 public class NotificationSentEvent
 {

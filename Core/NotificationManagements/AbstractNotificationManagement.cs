@@ -1,15 +1,17 @@
-﻿using Core.Notifications;
+﻿using Core.Events;
+using Core.Notifications;
 using Core.Notifications.Types;
+using Core.Providers.Types;
 using DotNetCore.CAP;
 
-namespace Core;
+namespace Core.NotificationManagements;
 
-public abstract class NotificationManagement
+public abstract class AbstractNotificationManagement
 {
     private readonly ICapPublisher _capPublisher;
     private readonly INotificationRepository _notificationRepository;
 
-    public NotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository)
+    public AbstractNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository)
     {
         _capPublisher = capPublisher;
         _notificationRepository = notificationRepository;
@@ -21,6 +23,8 @@ public abstract class NotificationManagement
 
     protected abstract int MaximumRetryCount { get; }
 
+    public ProviderStatus Status { get; set; } = ProviderStatus.Enable;
+
     protected abstract Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default);
 
     public async Task SendAsync(SendNotificationRequest req, CancellationToken cancellationToken = default)
@@ -29,18 +33,18 @@ public abstract class NotificationManagement
 
         if (MaximumRetryReached(notification))
         {
-            await RaisedFailedEventAsync(notification, cancellationToken);
+            await RaiseFailedEventAsync(notification, cancellationToken);
             return;
         }
 
-        var sendNotificationAsync = await SendNotificationAsync(req.Content, req.To, cancellationToken);
-        if (!sendNotificationAsync)
+        var success = await SendNotificationAsync(req.Content, req.To, cancellationToken);
+        if (!success)
         {
-            await RaisedSendEventAsync(req, cancellationToken);
+            await RaiseSendEventAsync(req, cancellationToken);
             return;
         }
 
-        await RaisedSentEventAsync(req.Id, cancellationToken);
+        await RaiseSentEventAsync(req.Id, cancellationToken);
     }
 
     private bool MaximumRetryReached(Notification notification)
@@ -67,36 +71,32 @@ public abstract class NotificationManagement
             return createdNotification;
         }
 
-        notification.Retry = +1;
+        notification.Retry += 1;
         await _notificationRepository.UpdateAsync(notification, cancellationToken);
         return notification;
     }
 
-    private async Task RaisedSendEventAsync(SendNotificationRequest req, CancellationToken cancellationToken = default)
+    private async Task RaiseSendEventAsync(SendNotificationRequest req, CancellationToken cancellationToken = default)
     {
-        await _capPublisher.PublishAsync(NotificationSendEvent.EventName + ProviderName, new NotificationSendEvent
+        await _capPublisher.PublishAsync(SendNotificationEvent.EventName + "_" + ProviderName, new SendNotificationEvent
         {
             RequestId = req.Id,
             Content = req.Content,
-            Type = req.Type,
             To = req.To,
-            From = ProviderName
+            From = ProviderName,
+            Type = req.Type
         }, cancellationToken: cancellationToken);
     }
 
-    private async Task RaisedFailedEventAsync(Notification notification, CancellationToken cancellationToken = default)
+    private async Task RaiseFailedEventAsync(Notification notification, CancellationToken cancellationToken = default)
     {
-        await _capPublisher.PublishAsync(NotificationSendEvent.EventName + ProviderName, new NotificationSendEvent
+        await _capPublisher.PublishAsync(NotificationFailedEvent.EventName, new NotificationFailedEvent
         {
-            RequestId = notification.Id,
-            Content = notification.Content,
-            Type = notification.Type,
-            To = notification.To,
-            From = ProviderName
+            Id = notification.Id
         }, cancellationToken: cancellationToken);
     }
 
-    private async Task RaisedSentEventAsync(Guid id, CancellationToken cancellationToken = default)
+    private async Task RaiseSentEventAsync(Guid id, CancellationToken cancellationToken = default)
     {
         await _capPublisher.PublishAsync(NotificationSentEvent.EventName, new NotificationSentEvent
         {

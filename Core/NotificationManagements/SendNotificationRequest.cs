@@ -1,9 +1,7 @@
-﻿namespace Core;
+﻿namespace Core.NotificationManagements;
 
-public sealed record SendNotificationRequest
+public sealed record SendNotificationRequest(Guid Id)
 {
-    public Guid Id { get; } = Guid.NewGuid();
-    
     public string Content { get; init; }
 
     public string To { get; init; }

@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sms.Fake", "Providers\Sms.Fake\Sms.Fake.csproj", "{950D9A5E-E6D2-45D8-AEA6-2202A570DAD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sms.Fake2", "Providers\Sms.Fake2\Sms.Fake2.csproj", "{87AD0047-533D-4314-B85E-7730BCFC11F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,8 +40,13 @@ Global
 		{950D9A5E-E6D2-45D8-AEA6-2202A570DAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{950D9A5E-E6D2-45D8-AEA6-2202A570DAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{950D9A5E-E6D2-45D8-AEA6-2202A570DAD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87AD0047-533D-4314-B85E-7730BCFC11F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87AD0047-533D-4314-B85E-7730BCFC11F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87AD0047-533D-4314-B85E-7730BCFC11F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87AD0047-533D-4314-B85E-7730BCFC11F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{950D9A5E-E6D2-45D8-AEA6-2202A570DAD7} = {8B83096F-0E19-4F0D-A575-164F5DAE5630}
+		{87AD0047-533D-4314-B85E-7730BCFC11F9} = {8B83096F-0E19-4F0D-A575-164F5DAE5630}
 	EndGlobalSection
 EndGlobal

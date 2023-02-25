@@ -1,4 +1,5 @@
-﻿using Core.Providers;
+﻿using Core;
+using Core.NotificationManagements;
 using Core.Providers.Exceptions;
 using Queries.Providers;
 
@@ -6,17 +7,18 @@ namespace Data.Sql.Providers;
 
 internal sealed class ProviderDetailsQuery : IProviderDetailsQuery
 {
-    private readonly IProviderCollection _providerCollection;
+    private readonly IEnumerable<AbstractNotificationManagement> _notificationManagement;
 
-    public ProviderDetailsQuery(IProviderCollection providerCollection)
+
+    public ProviderDetailsQuery(IEnumerable<AbstractNotificationManagement> notificationManagement)
     {
-        _providerCollection = providerCollection;
+        _notificationManagement = notificationManagement;
     }
 
     public Task<ProviderResponse> QueryAsync(string name, CancellationToken cancellationToken = default)
     {
-        var provider = _providerCollection.Providers
-            .FirstOrDefault(model => model.Name == name);
+        var provider = _notificationManagement
+            .FirstOrDefault(model => model.ProviderName == name);
 
         if (provider is null)
         {
@@ -26,10 +28,9 @@ internal sealed class ProviderDetailsQuery : IProviderDetailsQuery
 
         return Task.FromResult(new ProviderResponse
         {
-            Name = provider.Name,
-            Type = provider.Type,
+            Name = provider.ProviderName,
+            Type = provider.ProviderType,
             Status = provider.Status.ToString(),
-            Metas = provider.Metas,
         });
     }
 }

@@ -2,9 +2,9 @@
 using Core.Notifications.Types;
 using DotNetCore.CAP;
 
-namespace Core;
+namespace Core.Events;
 
-public class NotificationSentEventHandler : ICapSubscribe
+internal sealed  class NotificationSentEventHandler : ICapSubscribe
 {
     private readonly INotificationRepository _notificationRepository;
 
@@ -14,9 +14,13 @@ public class NotificationSentEventHandler : ICapSubscribe
     }
 
     [CapSubscribe(NotificationSentEvent.EventName)]
-    public async Task HandleAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task HandleAsync(NotificationSentEvent message, CancellationToken cancellationToken = default)
     {
-        var notification = await _notificationRepository.FindAsync(id, cancellationToken);
+        var notification = await _notificationRepository.FindAsync(message.Id, cancellationToken);
+        if (notification is null)
+        {
+            return;
+        }
         notification.Status = NotificationStatus.Sent;
         await _notificationRepository.UpdateAsync(notification, cancellationToken);
     }

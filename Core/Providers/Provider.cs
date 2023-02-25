@@ -1,36 +1,6 @@
-﻿using Core.Providers.Exceptions;
-using Core.Providers.Types;
+﻿using Core.Providers.Types;
 
 namespace Core.Providers;
-
-public interface IProviderCollection
-{
-    IReadOnlyList<Provider> Providers { get; }
-
-    void Add(Provider provider);
-}
-
-public class ProviderCollection : IProviderCollection
-{
-    private readonly List<Provider> _providers;
-
-    public ProviderCollection()
-    {
-        _providers = new List<Provider>();
-    }
-
-    public IReadOnlyList<Provider> Providers => _providers;
-
-    public void Add(Provider provider)
-    {
-        if (_providers.Any(p => p.Name == provider.Name))
-        {
-            throw new ProviderNameExistsException();
-        }
-
-        _providers.Add(provider);
-    }
-}
 
 public class Provider
 {

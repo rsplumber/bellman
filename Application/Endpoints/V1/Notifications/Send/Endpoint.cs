@@ -1,4 +1,5 @@
 using Core;
+using Core.Events;
 using DotNetCore.CAP;
 using FastEndpoints;
 using FluentValidation;
