@@ -12,7 +12,7 @@ public class NotificationResponse
 
     public string Type { get; set; }
 
-    public Guid ProviderId { get; set; }
+    public int Retry { get; set; }
 
     public string Status { get; set; }
 

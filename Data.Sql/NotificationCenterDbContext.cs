@@ -56,9 +56,9 @@ public class NotificationCenterDbContext : DbContext
                 .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasColumnName("type");
 
-            builder.Property(notification => notification.ProviderId)
+            builder.Property(notification => notification.Retry)
                 .UsePropertyAccessMode(PropertyAccessMode.Property)
-                .HasColumnName("provider_id");
+                .HasColumnName("retry");
 
             builder.Property(notification => notification.Status)
                 .UsePropertyAccessMode(PropertyAccessMode.Property)

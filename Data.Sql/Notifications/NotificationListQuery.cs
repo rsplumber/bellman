@@ -23,7 +23,7 @@ internal sealed class NotificationListQuery : INotificationListQuery
                 Type = notification.Type,
                 Status = notification.Status.ToString(),
                 Content = notification.Content,
-                ProviderId = notification.ProviderId,
+                Retry = notification.Retry,
                 CreatedDateUtc = notification.CreatedDateUtc
             })
             .ToListAsync(cancellationToken: cancellationToken);

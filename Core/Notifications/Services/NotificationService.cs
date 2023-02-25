@@ -20,7 +20,6 @@ public class NotificationService : INotificationService
             From = req.From,
             To = req.To,
             Type = req.ProviderType,
-            ProviderId = req.ProviderId,
             Status = req.Status
         };
 
