@@ -3,5 +3,6 @@
 public enum NotificationStatus
 {
     Failed,
-    Sending
+    Sending,
+    Sent
 }
