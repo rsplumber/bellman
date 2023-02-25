@@ -4,7 +4,7 @@ using DotNetCore.CAP;
 
 namespace Core;
 
-public abstract class NotificationManagement : INotificationManagement
+public abstract class NotificationManagement
 {
     private readonly ICapPublisher _capPublisher;
     private readonly INotificationRepository _notificationRepository;

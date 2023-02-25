@@ -1,4 +1,5 @@
 using Core;
+using DotNetCore.CAP;
 using FastEndpoints;
 using FluentValidation;
 
@@ -6,12 +7,11 @@ namespace Application.Endpoints.V1.Notifications.Send;
 
 internal sealed class Endpoint : Endpoint<Request>
 {
-    private readonly INotificationManagement _notificationManagement;
+    private readonly ICapPublisher _capPublisher;
 
-
-    public Endpoint(INotificationManagement notificationManagement)
+    public Endpoint(ICapPublisher capPublisher)
     {
-        _notificationManagement = notificationManagement;
+        _capPublisher = capPublisher;
     }
 
     public override void Configure()
@@ -23,12 +23,12 @@ internal sealed class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        await _notificationManagement.SendAsync(new SendNotificationRequest()
+        await _capPublisher.PublishAsync(ProviderSelectionEvent.EventName, new ProviderSelectionEvent
         {
             To = req.To,
             Content = req.Content,
             Type = req.Type
-        }, ct);
+        }, cancellationToken: ct);
         await SendOkAsync(ct);
     }
 }

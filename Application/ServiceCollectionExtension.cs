@@ -13,7 +13,6 @@ internal static class ServiceCollectionExtension
     {
         services.AddData(configuration);
         services.AddScoped<INotificationService, NotificationService>();
-        services.AddScoped<INotificationManagement, NotificationManagement>();
         services.AddSingleton<IProviderCollection, ProviderCollection>();
 
         services.AddCap(x =>
