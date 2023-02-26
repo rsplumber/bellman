@@ -27,6 +27,11 @@ public abstract class AbstractNotificationManagement
 
     protected abstract Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default);
 
+    protected virtual Task<bool> SendBatchNotificationAsync(string content, string[] to, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task SendAsync(SendNotificationRequest req, CancellationToken cancellationToken = default)
     {
         var notification = await InsertNotification(req, cancellationToken);
@@ -46,6 +51,7 @@ public abstract class AbstractNotificationManagement
 
         await RaiseSentEventAsync(req.Id, cancellationToken);
     }
+
 
     private bool MaximumRetryReached(Notification notification)
     {

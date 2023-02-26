@@ -16,23 +16,20 @@ internal sealed class Endpoint : Endpoint<Request>
 
     public override void Configure()
     {
-        Post("notifications/send-batch");
+        Post("notifications/send/batch");
         AllowAnonymous();
         Version(1);
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        for (var i = 0; i < req.To.Count; i++)
+        await _capPublisher.PublishAsync(ProviderSelectionEvent.EventName, new ProviderSelectionEvent
         {
-            await _capPublisher.PublishAsync(ProviderSelectionEvent.EventName, new ProviderSelectionEvent
-            {
-                To = req.To[i],
-                Content = req.Content,
-                Type = req.Type
-            }, cancellationToken: ct);
-            await SendOkAsync(ct);
-        }
+            To = req.To,
+            Content = req.Content,
+            Type = req.Type
+        }, cancellationToken: ct);
+        await SendOkAsync(ct);
     }
 }
 
@@ -68,7 +65,7 @@ internal sealed record Request
 {
     public string Content { get; init; }
 
-    public List<string> To { get; init; }
+    public string[] To { get; init; }
 
     public string Type { get; init; }
 }

@@ -1,4 +1,3 @@
-using Core;
 using Core.Events;
 using DotNetCore.CAP;
 using FastEndpoints;
@@ -26,7 +25,7 @@ internal sealed class Endpoint : Endpoint<Request>
     {
         await _capPublisher.PublishAsync(ProviderSelectionEvent.EventName, new ProviderSelectionEvent
         {
-            To = req.To,
+            To = new[] {req.To},
             Content = req.Content,
             Type = req.Type
         }, cancellationToken: ct);

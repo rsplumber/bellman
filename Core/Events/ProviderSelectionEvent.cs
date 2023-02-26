@@ -6,7 +6,7 @@ public class ProviderSelectionEvent
     
     public string Content { get; set; }
     
-    public string To { get; set; }
+    public string[] To { get; set; }
 
     public string Type { get; set; }
 }

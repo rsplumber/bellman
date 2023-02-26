@@ -23,10 +23,21 @@ internal sealed class ProviderSelectionEventHandler : ICapSubscribe
             return;
         }
 
+        if (message.To.Length > 1)
+        {
+            await _capPublisher.PublishAsync(SendBatchNotificationEvent.EventName + "_" + provider.ProviderName, new SendBatchNotificationEvent
+            {
+                Content = message.Content,
+                To = message.To,
+                Type = message.Type
+            });
+            return;
+        }
+
         await _capPublisher.PublishAsync(SendNotificationEvent.EventName + "_" + provider.ProviderName, new SendNotificationEvent
         {
             Content = message.Content,
-            To = message.To,
+            To = message.To.First(),
             Type = message.Type
         });
     }
