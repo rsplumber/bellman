@@ -2,18 +2,18 @@
 using Core.NotificationManagements;
 using DotNetCore.CAP;
 
-namespace Sms.Fake;
+namespace Sms.Magfa;
 
-internal sealed class FakeEventHandler : ICapSubscribe
+internal sealed class SendSmsEventHandler : ICapSubscribe
 {
     private readonly AbstractNotificationManagement _notificationManagement;
 
-    public FakeEventHandler(AbstractNotificationManagement notificationManagement)
+    public SendSmsEventHandler(AbstractNotificationManagement notificationManagement)
     {
         _notificationManagement = notificationManagement;
     }
 
-    [CapSubscribe("notification_send_fake")]
+    [CapSubscribe("notification_send_magfa")]
     public async Task HandleAsync(SendNotificationEvent message)
     {
         await _notificationManagement.SendAsync(new SendNotificationRequest(message.RequestId)

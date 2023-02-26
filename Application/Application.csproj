@@ -27,9 +27,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Core\Core.csproj" />
       <ProjectReference Include="..\Data.Sql\Data.Sql.csproj" />
-      <ProjectReference Include="..\Providers\Email.Fake\Email.Fake.csproj" />
-      <ProjectReference Include="..\Providers\Sms.Fake2\Sms.Fake2.csproj" />
-      <ProjectReference Include="..\Providers\Sms.Fake\Sms.Fake.csproj" />
+      <ProjectReference Include="..\Providers\Sms\Sms.Magfa\Sms.Magfa.csproj" />
       <ProjectReference Include="..\Queries\Queries.csproj" />
     </ItemGroup>
 
