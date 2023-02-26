@@ -40,8 +40,8 @@ internal sealed class EndpointSummary : Summary<Endpoint>
 {
     public EndpointSummary()
     {
-        Summary = "Send notification in the system";
-        Description = "Send notification in the system";
+        Summary = "Send batch notification in the system";
+        Description = "Send batch notification in the system";
         Response(200, "Notification was successfully sent");
     }
 }
