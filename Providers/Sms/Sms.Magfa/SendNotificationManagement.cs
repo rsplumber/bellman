@@ -9,7 +9,7 @@ namespace Sms.Magfa;
 
 public class SendNotificationManagement : AbstractNotificationManagement
 {
-    public override string ProviderName => "Magfa";
+    public override string ProviderName => "magfa";
 
     public override string ProviderType => "sms";
 
@@ -20,6 +20,8 @@ public class SendNotificationManagement : AbstractNotificationManagement
     private const string Password = "YEfVjZSomtLHIPKW";
 
     private const string ApiUrl = "http/sms/v2/send";
+
+    private const string SenderNumber = "98300041925";
 
     private readonly IHttpClientFactory _clientFactory;
 
@@ -36,7 +38,7 @@ public class SendNotificationManagement : AbstractNotificationManagement
 
         var request = new
         {
-            senders = new List<string> {"98300041925"},
+            senders = new List<string> {SenderNumber},
             messages = new List<string> {content},
             recipients = new[] {to},
         };

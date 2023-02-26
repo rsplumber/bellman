@@ -2,15 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Sms.Magfa;
+namespace Sms.Persiafava;
 
 public static class ServiceCollectionExtension
 {
-    public static void AddMagfa(this IServiceCollection services, IConfiguration configuration)
+    public static void AddPersiafava(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<SendSmsEventHandler>();
         services.AddScoped<AbstractNotificationManagement, SendNotificationManagement>();
-        services.AddHttpClient("magfa", c => { c.BaseAddress = new Uri("https://sms.magfa.com/api/"); });
-
+        services.AddHttpClient("persiafava", c => { c.BaseAddress = new Uri("http://sms.persiafava.com/"); });
     }
 }
