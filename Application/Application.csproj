@@ -28,6 +28,8 @@
       <ProjectReference Include="..\Core\Core.csproj" />
       <ProjectReference Include="..\Data.Sql\Data.Sql.csproj" />
       <ProjectReference Include="..\Providers\Sms\Sms.Magfa\Sms.Magfa.csproj" />
+      <ProjectReference Include="..\Providers\Sms\Sms.Persiafava\Sms.Persiafava.csproj" />
+      <ProjectReference Include="..\Providers\Sms\Sms.Ssmss\Sms.Ssmss.csproj" />
       <ProjectReference Include="..\Queries\Queries.csproj" />
     </ItemGroup>
 
