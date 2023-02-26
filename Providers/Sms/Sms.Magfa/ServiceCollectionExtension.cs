@@ -11,6 +11,5 @@ public static class ServiceCollectionExtension
         services.AddScoped<SendSmsEventHandler>();
         services.AddScoped<AbstractNotificationManagement, SendNotificationManagement>();
         services.AddHttpClient("magfa", c => { c.BaseAddress = new Uri("https://sms.magfa.com/api/"); });
-
     }
 }

@@ -8,9 +8,10 @@ internal sealed class SendSmsEventHandler : ICapSubscribe
 {
     private readonly AbstractNotificationManagement _notificationManagement;
 
-    public SendSmsEventHandler(AbstractNotificationManagement notificationManagement)
+    public SendSmsEventHandler(IEnumerable<AbstractNotificationManagement> notificationManagement)
     {
-        _notificationManagement = notificationManagement;
+        _notificationManagement = notificationManagement.FirstOrDefault(p => p.ProviderName == "magfa")
+                                  ?? throw new ArgumentException("Register provider");
     }
 
     [CapSubscribe("notification_send_magfa")]

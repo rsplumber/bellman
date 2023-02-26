@@ -3,6 +3,8 @@ using Core.Notifications.Services;
 using Data.Sql;
 using Savorboard.CAP.InMemoryMessageQueue;
 using Sms.Magfa;
+using Sms.Persiafava;
+using Sms.Ssmss;
 
 namespace Application;
 
@@ -22,5 +24,7 @@ internal static class ServiceCollectionExtension
 
         services.AddCore(configuration);
         services.AddMagfa(configuration);
+        services.AddPersiafava(configuration);
+        services.AddSsmss(configuration);
     }
 }

@@ -18,5 +18,6 @@ internal static class ApplicationBuilderExtension
         {
             // ignored
         }
+        
     }
 }
