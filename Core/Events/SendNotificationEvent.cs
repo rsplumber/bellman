@@ -1,16 +1,38 @@
-﻿namespace Core.Events;
+﻿using Core.Notifications;
+using DotNetCore.CAP;
 
-public class SendNotificationEvent
+namespace Core.Events;
+
+public sealed record SendNotificationEvent
 {
-    public const string EventName = "notification_send";
+    public const string EventName = "bellman_notification_send";
 
     public Guid RequestId { get; set; } = Guid.NewGuid();
 
-    public string Content { get; set; }
+    public string Content { get; init; } = default!;
 
-    public string From { get; set; }
+    public string[] To { get; init; } = Array.Empty<string>();
 
-    public string To { get; set; }
+    public string Provider { get; init; } = default!;
+}
 
-    public string Type { get; set; }
+internal sealed class SendNotificationEventHandler : ICapSubscribe
+{
+    private readonly IEnumerable<AbstractNotificationManagement> _notificationManagements;
+
+    public SendNotificationEventHandler(IEnumerable<AbstractNotificationManagement> notificationManagement)
+    {
+        _notificationManagements = notificationManagement;
+    }
+
+    [CapSubscribe("bellman_notification_send.*")]
+    public Task HandleAsync(SendNotificationEvent message)
+    {
+        var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
+        return notificationManagement.SendAsync(new SendNotificationRequest(message.RequestId)
+        {
+            Content = message.Content,
+            To = message.To
+        });
+    }
 }

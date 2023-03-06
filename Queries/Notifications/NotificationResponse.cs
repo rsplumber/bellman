@@ -1,20 +1,20 @@
 ﻿namespace Queries.Notifications;
 
-public class NotificationResponse
+public sealed record NotificationResponse
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public string Content { get; set; }
+    public string Content { get; init; } = default!;
 
-    public string From { get; set; }
+    public string From { get; init; } = default!;
 
-    public string To { get; set; }
+    public List<string> To { get; init; } = default!;
 
-    public string Type { get; set; }
+    public string Type { get; init; } = default!;
 
-    public int Retry { get; set; }
+    public int Retry { get; init; }
 
-    public string Status { get; set; }
+    public string Status { get; init; } = default!;
 
-    public DateTime CreatedDateUtc { get; set; }
+    public DateTime CreatedDateUtc { get; init; }
 }

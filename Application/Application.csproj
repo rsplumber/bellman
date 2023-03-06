@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FastEndpoints" Version="5.7.2" />
-        <PackageReference Include="FastEndpoints.Swagger" Version="5.7.2" />
-        <PackageReference Include="DotNetCore.CAP.InMemoryStorage" Version="7.0.3" />
-        <PackageReference Include="Savorboard.CAP.InMemoryMessageQueue" Version="7.0.0" />
-        <PackageReference Include="DotNetCore.CAP.Dashboard" Version="7.0.3" />
+        <PackageReference Include="DotNetCore.CAP.Kafka" Version="7.1.0" />
+        <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="7.1.0" />
+        <PackageReference Include="FastEndpoints" Version="5.8.0" />
+        <PackageReference Include="FastEndpoints.Swagger" Version="5.8.0" />
+        <PackageReference Include="KunderaNet.FastEndpoints.Authorization" Version="1.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Core\Core.csproj" />
+      <ProjectReference Include="..\Data.InMemory\Data.InMemory.csproj" />
       <ProjectReference Include="..\Data.Sql\Data.Sql.csproj" />
       <ProjectReference Include="..\Providers\Sms\Sms.Magfa\Sms.Magfa.csproj" />
       <ProjectReference Include="..\Providers\Sms\Sms.Persiafava\Sms.Persiafava.csproj" />

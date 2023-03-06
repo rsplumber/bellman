@@ -1,4 +1,5 @@
-﻿using Core.NotificationManagements;
+﻿using System.Net.Http.Headers;
+using Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,8 +9,13 @@ public static class ServiceCollectionExtension
 {
     public static void AddPersiafava(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<SendSmsEventHandler>();
-        services.AddScoped<AbstractNotificationManagement, SendNotificationManagement>();
-        services.AddHttpClient("persiafava", c => { c.BaseAddress = new Uri("http://sms.persiafava.com/"); });
+        services.AddProvider<SendNotificationManagement>();
+        services.AddHttpClient("persiafava", c =>
+        {
+            c.BaseAddress = new Uri("http://sms.persiafava.com");
+            c.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+        });
     }
 }

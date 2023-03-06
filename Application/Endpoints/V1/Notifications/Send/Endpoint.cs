@@ -1,34 +1,29 @@
-using Core.Events;
-using DotNetCore.CAP;
+using Core.Notifications;
 using FastEndpoints;
 using FluentValidation;
 
 namespace Application.Endpoints.V1.Notifications.Send;
 
-internal sealed class Endpoint : Endpoint<Request>
+internal sealed class Endpoint : Endpoint<SendNotification>
 {
-    private readonly ICapPublisher _capPublisher;
+    private readonly INotificationService _notificationService;
 
-    public Endpoint(ICapPublisher capPublisher)
+    public Endpoint(INotificationService notificationService)
     {
-        _capPublisher = capPublisher;
+        _notificationService = notificationService;
     }
 
     public override void Configure()
     {
         Post("notifications/send");
         AllowAnonymous();
+        // Permissions("bellman_notifications_send");
         Version(1);
     }
 
-    public override async Task HandleAsync(Request req, CancellationToken ct)
+    public override async Task HandleAsync(SendNotification req, CancellationToken ct)
     {
-        await _capPublisher.PublishAsync(ProviderSelectionEvent.EventName, new ProviderSelectionEvent
-        {
-            To = new[] {req.To},
-            Content = req.Content,
-            Type = req.Type
-        }, cancellationToken: ct);
+        await _notificationService.SendAsync(req, ct);
         await SendOkAsync(ct);
     }
 }
@@ -37,13 +32,13 @@ internal sealed class EndpointSummary : Summary<Endpoint>
 {
     public EndpointSummary()
     {
-        Summary = "Send notification in the system";
-        Description = "Send notification in the system";
+        Summary = "Send batch notification in the system";
+        Description = "Send batch notification in the system";
         Response(200, "Notification was successfully sent");
     }
 }
 
-internal sealed class RequestValidator : Validator<Request>
+internal sealed class RequestValidator : Validator<SendNotification>
 {
     public RequestValidator()
     {
@@ -59,13 +54,4 @@ internal sealed class RequestValidator : Validator<Request>
             .NotEmpty().WithMessage("Enter Provider type")
             .NotNull().WithMessage("Enter Provider type");
     }
-}
-
-internal sealed record Request
-{
-    public string Content { get; init; }
-
-    public string To { get; init; }
-
-    public string Type { get; init; }
 }

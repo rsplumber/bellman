@@ -1,19 +1,14 @@
 ﻿using Core.Notifications;
-using DotNetCore.CAP;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.Sql;
+namespace Data;
 
-public class NotificationCenterDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    private readonly ICapPublisher _eventBus;
-
-    public NotificationCenterDbContext(DbContextOptions<NotificationCenterDbContext> options, ICapPublisher eventBus) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        _eventBus = eventBus;
     }
-
 
     public DbSet<Notification> Notifications { get; set; }
 
@@ -24,7 +19,7 @@ public class NotificationCenterDbContext : DbContext
     }
 
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await base.SaveChangesAsync(cancellationToken);
     }

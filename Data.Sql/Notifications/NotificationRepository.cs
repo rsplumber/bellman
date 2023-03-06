@@ -1,13 +1,13 @@
 ﻿using Core.Notifications;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Sql.Notifications;
+namespace Data.Notifications;
 
 public class NotificationRepository : INotificationRepository
 {
-    private readonly NotificationCenterDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-    public NotificationRepository(NotificationCenterDbContext dbContext)
+    public NotificationRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }

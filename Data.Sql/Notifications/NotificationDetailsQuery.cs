@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Queries.Notifications;
 
-namespace Data.Sql.Notifications;
+namespace Data.Notifications;
 
 internal sealed class NotificationDetailsQuery : INotificationDetailsQuery
 {
-    private readonly NotificationCenterDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-    public NotificationDetailsQuery(NotificationCenterDbContext dbContext)
+    public NotificationDetailsQuery(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -16,13 +16,13 @@ internal sealed class NotificationDetailsQuery : INotificationDetailsQuery
     public async Task<NotificationResponse> QueryAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var notification = await _dbContext.Notifications
+            .AsNoTracking()
             .FirstOrDefaultAsync(model => model.Id == id, cancellationToken);
 
         if (notification is null)
         {
             throw new NotificationNotFoundException();
         }
-
 
         return new()
         {

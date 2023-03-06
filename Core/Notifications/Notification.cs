@@ -6,17 +6,23 @@ public class Notification
 {
     public Guid Id { get; set; }
 
-    public string Content { get; set; }
+    public string Content { get; init; } = default!;
 
-    public string From { get; set; }
+    public string From { get; init; } = default!;
 
-    public string To { get; set; }
+    public List<string> To { get; init; } = new();
 
-    public string Type { get; set; }
+    public string Type { get; init; } = default!;
 
-    public int Retry { get; set; }
-    
-    public NotificationStatus Status { get; set; }
+    public int Retry { get; private set; }
+
+    public NotificationStatus Status { get; private set; } = NotificationStatus.Sending;
 
     public DateTime CreatedDateUtc { get; internal set; } = DateTime.UtcNow;
+
+    public void IncrementRetry() => Retry += 1;
+
+    public void Failed() => Status = NotificationStatus.Failed;
+
+    public void Sent() => Status = NotificationStatus.Sent;
 }

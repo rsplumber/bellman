@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Queries.Notifications;
 
-namespace Data.Sql.Notifications;
+namespace Data.Notifications;
 
 internal sealed class NotificationListQuery : INotificationListQuery
 {
-    private readonly NotificationCenterDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-    public NotificationListQuery(NotificationCenterDbContext dbContext)
+    public NotificationListQuery(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -15,6 +15,7 @@ internal sealed class NotificationListQuery : INotificationListQuery
     public async Task<List<NotificationResponse>> QueryAsync(CancellationToken cancellationToken = default)
     {
         return await _dbContext.Notifications
+            .AsNoTracking()
             .Select(notification => new NotificationResponse
             {
                 Id = notification.Id,

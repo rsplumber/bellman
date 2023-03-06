@@ -2,7 +2,7 @@ namespace Core.Providers.Exceptions;
 
 public class ProviderNameExistsException : ApplicationException
 {
-    public ProviderNameExistsException() : base($"Provider name exists")
+    public ProviderNameExistsException(string name) : base($"Provider {name} exists")
     {
     }
 }

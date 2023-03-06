@@ -4,10 +4,11 @@ namespace Core.Providers;
 
 public class Provider
 {
-    public string Name { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-    public string Type { get; set; }
+    public string Name { get; init; } = default!;
+
+    public string Type { get; init; } = default!;
 
     public ProviderStatus Status { get; set; } = ProviderStatus.Disable;
-    public Dictionary<string, string>? Metas { get; set; }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using Core.NotificationManagements;
 using Core.Notifications;
 using DotNetCore.CAP;
 
@@ -7,22 +6,22 @@ namespace Sms.Ssmss;
 
 public class SendNotificationManagement : AbstractNotificationManagement
 {
+    private const string Username = "sarmayehbulk";
+    private const string Password = "Sabas0ft123@";
+    private const string SenderNumber = "10007666000000";
+    private readonly IHttpClientFactory _clientFactory;
+    private const string ApiUrl = "rest/sms_send?";
+
+    public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory) : base(capPublisher, notificationRepository)
+    {
+        _clientFactory = clientFactory;
+    }
+
     public override string ProviderName => "ssmss";
 
     public override string ProviderType => "sms";
 
     protected override int MaximumRetryCount => 2;
-
-    private const string Username = "sarmayehbulk";
-
-    private const string Password = "Sabas0ft123@";
-
-    private const string ApiUrl = "rest/sms_send?";
-
-    private const string SenderNumber = "10007666000000";
-
-    private readonly IHttpClientFactory _clientFactory;
-
 
     protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default)
     {
@@ -33,12 +32,12 @@ public class SendNotificationManagement : AbstractNotificationManagement
 
         var parameters = new Dictionary<string, string>
         {
-            {"login_username", Username},
-            {"login_password", Password},
-            {"receiver_number", to},
-            {"note_arr", content},
-            {"note_arr[]", content},
-            {"sender_number", SenderNumber}
+            { "login_username", Username },
+            { "login_password", Password },
+            { "receiver_number", to },
+            { "note_arr", content },
+            { "note_arr[]", content },
+            { "sender_number", SenderNumber }
         };
         var encodedContent = new FormUrlEncodedContent(parameters);
 
@@ -46,8 +45,8 @@ public class SendNotificationManagement : AbstractNotificationManagement
         return httpResponseMessage.IsSuccessStatusCode;
     }
 
-    public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory) : base(capPublisher, notificationRepository)
+    protected override Task<bool> SendBatchNotificationAsync(string content, string[] to, CancellationToken cancellationToken = default)
     {
-        _clientFactory = clientFactory;
+        throw new NotImplementedException();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.NotificationManagements;
+﻿using System.Net.Http.Headers;
+using Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,8 +9,13 @@ public static class ServiceCollectionExtension
 {
     public static void AddMagfa(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<SendSmsEventHandler>();
-        services.AddScoped<AbstractNotificationManagement, SendNotificationManagement>();
-        services.AddHttpClient("magfa", c => { c.BaseAddress = new Uri("https://sms.magfa.com/api/"); });
+        services.AddProvider<SendNotificationManagement>();
+        services.AddHttpClient("magfa", c =>
+        {
+            c.BaseAddress = new Uri("https://sms.magfa.com/api");
+            c.DefaultRequestHeaders
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        });
     }
 }

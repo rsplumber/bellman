@@ -2,12 +2,9 @@
 
 public class ProviderResponse
 {
-    public string Name { get; set; }
+    public string Name { get; init; } = default!;
 
-    public string Type { get; set; }
+    public string Type { get; init; } = default!;
 
-    public string Status { get; set; }
-
-    public Dictionary<string, string>? Metas { get; set; }
-
+    public string Status { get; init; } = default!;
 }

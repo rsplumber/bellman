@@ -7,7 +7,6 @@ internal sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
 {
     private readonly IProviderListQuery _providerListQuery;
 
-
     public Endpoint(IProviderListQuery providerListQuery)
     {
         _providerListQuery = providerListQuery;
@@ -17,6 +16,7 @@ internal sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
     {
         Get("providers");
         AllowAnonymous();
+        // Permissions("bellman_providers_list");
         Version(1);
     }
 

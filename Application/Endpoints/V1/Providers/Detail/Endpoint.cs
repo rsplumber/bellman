@@ -1,4 +1,5 @@
 using FastEndpoints;
+using FluentValidation;
 using Queries.Providers;
 
 namespace Application.Endpoints.V1.Providers.Detail;
@@ -15,7 +16,7 @@ internal sealed class Endpoint : Endpoint<Request, ProviderResponse>
     public override void Configure()
     {
         Get("providers/{name}");
-        AllowAnonymous();
+        Permissions("bellman_providers_details");
         Version(1);
     }
 
@@ -38,5 +39,15 @@ internal sealed class EndpointSummary : Summary<Endpoint>
 
 internal sealed record Request
 {
-    public string Name { get; set; }
+    public string Name { get; init; } = default!;
+}
+
+internal sealed class RequestValidator : Validator<Request>
+{
+    public RequestValidator()
+    {
+        RuleFor(request => request.Name)
+            .NotEmpty().WithMessage("Enter Name")
+            .NotNull().WithMessage("Enter Name");
+    }
 }
