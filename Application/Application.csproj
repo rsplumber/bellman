@@ -9,14 +9,14 @@
     <ItemGroup>
         <PackageReference Include="DotNetCore.CAP.Kafka" Version="7.1.0" />
         <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="7.1.0" />
-        <PackageReference Include="FastEndpoints" Version="5.8.0" />
-        <PackageReference Include="FastEndpoints.Swagger" Version="5.8.0" />
+        <PackageReference Include="FastEndpoints" Version="5.8.1" />
+        <PackageReference Include="FastEndpoints.Swagger" Version="5.8.1" />
         <PackageReference Include="KunderaNet.FastEndpoints.Authorization" Version="1.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
