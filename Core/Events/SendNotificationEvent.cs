@@ -5,7 +5,7 @@ namespace Core.Events;
 
 public sealed record SendNotificationEvent
 {
-    public const string EventName = "bellman_notification_send";
+    public const string EventName = "bellman.notification.send";
 
     public Guid RequestId { get; set; } = Guid.NewGuid();
 
@@ -25,7 +25,7 @@ internal sealed class SendNotificationEventHandler : ICapSubscribe
         _notificationManagements = notificationManagement;
     }
 
-    [CapSubscribe("bellman_notification_send.*")]
+    [CapSubscribe("bellman.notification.send.*")]
     public Task HandleAsync(SendNotificationEvent message)
     {
         var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);

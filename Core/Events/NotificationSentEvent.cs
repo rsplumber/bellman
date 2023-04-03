@@ -5,7 +5,7 @@ namespace Core.Events;
 
 public sealed record NotificationSentEvent
 {
-    public const string EventName = "bellman_notification_sent";
+    public const string EventName = "bellman.notification.sent";
 
     public Guid Id { get; init; }
 }

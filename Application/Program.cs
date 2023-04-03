@@ -35,9 +35,18 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddCap(options =>
 {
-    options.UseKafka("localhost:9092");
-    options.UsePostgreSql(builder.Configuration.GetConnectionString("default") ??
-                          throw new ArgumentNullException("connectionString", "Enter connection string in app settings"));
+    options.UseRabbitMQ(op =>
+    {
+        op.Password = "admin";
+        op.UserName = "admin";
+        op.HostName = "localhost";
+        op.ExchangeName = "bellman";
+    });
+    options.UsePostgreSql(sqlOptions =>
+    {
+        sqlOptions.ConnectionString = builder.Configuration.GetConnectionString("default") ?? throw new ArgumentNullException("connectionString", "Enter connection string in app settings");
+        sqlOptions.Schema = "events";
+    });
 });
 
 builder.Services.AddCore(builder.Configuration);

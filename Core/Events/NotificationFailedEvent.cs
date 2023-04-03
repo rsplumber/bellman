@@ -5,7 +5,7 @@ namespace Core.Events;
 
 public sealed record NotificationFailedEvent
 {
-    public const string EventName = "bellman_notification_failed";
+    public const string EventName = "bellman.notification.failed";
 
     public Guid Id { get; init; }
 }
