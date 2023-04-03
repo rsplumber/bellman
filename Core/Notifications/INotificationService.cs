@@ -55,13 +55,11 @@ internal sealed class NotificationService : INotificationService
             throw new ProviderDisabledException();
         }
 
-        await _eventBus.PublishAsync(EventNameByProvider(), new SendNotificationEvent
+        await _eventBus.PublishAsync(SendNotificationEvent.EventName + "." + provider.Name, new SendNotificationEvent
         {
             Content = request.Content,
             To = request.To,
             Provider = provider.Name
         }, cancellationToken: cancellationToken);
-
-        string EventNameByProvider() => SendNotificationEvent.EventName + "." + provider.Name;
     }
 }
