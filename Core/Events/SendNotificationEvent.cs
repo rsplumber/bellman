@@ -25,8 +25,30 @@ internal sealed class SendNotificationEventHandler : ICapSubscribe
         _notificationManagements = notificationManagement;
     }
 
-    [CapSubscribe("bellman.notification.send.*")]
-    public Task HandleAsync(SendNotificationEvent message)
+    [CapSubscribe("bellman.notification.send.sms.*", Group = "bellman.notification.send.sms.queue")]
+    public Task HandleSmsAsync(SendNotificationEvent message)
+    {
+        var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
+        return notificationManagement.SendAsync(new SendNotificationRequest(message.RequestId)
+        {
+            Content = message.Content,
+            To = message.To
+        });
+    }
+
+    [CapSubscribe("bellman.notification.send.email.*", Group = "bellman.notification.send.email.queue")]
+    public Task HandleEmailAsync(SendNotificationEvent message)
+    {
+        var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
+        return notificationManagement.SendAsync(new SendNotificationRequest(message.RequestId)
+        {
+            Content = message.Content,
+            To = message.To
+        });
+    }
+
+    [CapSubscribe("bellman.notification.send.push.*", Group = "bellman.notification.send.push.queue")]
+    public Task HandlePushNotificationAsync(SendNotificationEvent message)
     {
         var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
         return notificationManagement.SendAsync(new SendNotificationRequest(message.RequestId)

@@ -19,7 +19,7 @@ internal sealed class NotificationFailedEventHandler : ICapSubscribe
         _notificationRepository = notificationRepository;
     }
 
-    [CapSubscribe(NotificationFailedEvent.EventName)]
+    [CapSubscribe(NotificationFailedEvent.EventName, Group = "bellman.notification.failed")]
     public async Task HandleAsync(NotificationFailedEvent message, CancellationToken cancellationToken = default)
     {
         var notification = await _notificationRepository.FindAsync(message.Id, cancellationToken);

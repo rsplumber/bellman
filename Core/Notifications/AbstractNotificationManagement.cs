@@ -95,11 +95,12 @@ public abstract class AbstractNotificationManagement
 
     private async Task RaiseSendEventAsync(SendNotificationRequest req, CancellationToken cancellationToken = default)
     {
-        await _eventBus.PublishAsync(SendNotificationEvent.EventName + "." + ProviderName, new SendNotificationEvent
+        await _eventBus.PublishAsync($"{SendNotificationEvent.EventName}.{ProviderType}.{ProviderName}", new SendNotificationEvent
         {
             RequestId = req.Id,
             Content = req.Content,
             To = req.To,
+            Provider = ProviderName
         }, cancellationToken: cancellationToken);
     }
 

@@ -39,7 +39,7 @@ builder.Services.AddCap(options =>
     {
         op.Password = "admin";
         op.UserName = "admin";
-        op.HostName = "localhost";
+        op.HostName = "192.168.70.119";
         op.ExchangeName = "bellman";
     });
     options.UsePostgreSql(sqlOptions =>
