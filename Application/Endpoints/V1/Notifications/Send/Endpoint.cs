@@ -16,8 +16,7 @@ internal sealed class Endpoint : Endpoint<SendNotification>
     public override void Configure()
     {
         Post("notifications/send");
-        AllowAnonymous();
-        // Permissions("bellman_notifications_send");
+        Permissions("bellman_notifications_send");
         Version(1);
     }
 

@@ -15,8 +15,7 @@ internal sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
     public override void Configure()
     {
         Get("providers");
-        AllowAnonymous();
-        // Permissions("bellman_providers_list");
+        Permissions("bellman_providers_list");
         Version(1);
     }
 

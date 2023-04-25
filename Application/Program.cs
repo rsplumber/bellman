@@ -5,18 +5,17 @@ using Data.InMemory;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using KunderaNet.FastEndpoints.Authorization;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseKestrel();
 builder.WebHost.ConfigureKestrel((_, options) =>
 {
     options.ListenAnyIP(5111, _ => { });
-    options.ListenAnyIP(5112, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
-        listenOptions.UseHttps();
-    });
+    // options.ListenAnyIP(5112, listenOptions =>
+    // {
+    //     listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+    //     listenOptions.UseHttps();
+    // });
 });
 
 builder.Services.AddCors();
