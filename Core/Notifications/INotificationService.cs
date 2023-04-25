@@ -61,7 +61,5 @@ internal sealed class NotificationService : INotificationService
             To = request.To,
             Provider = provider.Name
         }, cancellationToken: cancellationToken);
-
-        string EventNameByProvider() => SendNotificationEvent.EventName + "." + provider.Name;
     }
 }
