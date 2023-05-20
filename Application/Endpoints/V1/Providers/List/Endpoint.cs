@@ -3,7 +3,7 @@ using Queries.Providers;
 
 namespace Application.Endpoints.V1.Providers.List;
 
-internal sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
+file sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
 {
     private readonly IProviderListQuery _providerListQuery;
 
@@ -26,7 +26,7 @@ internal sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
     }
 }
 
-internal sealed class EndpointSummary : Summary<Endpoint>
+file sealed class EndpointSummary : Summary<Endpoint>
 {
     public EndpointSummary()
     {

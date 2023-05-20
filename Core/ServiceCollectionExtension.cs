@@ -16,6 +16,7 @@ public static class ServiceCollectionExtension
         services.TryAddScoped<SendNotificationEventHandler>();
         services.TryAddScoped<INotificationService, NotificationService>();
         services.TryAddScoped<IProviderSelectionService, ProviderSelectionService>();
+        services.TryAddScoped<IProviderService, ProviderService>();
     }
 
     public static void AddProvider<TProvider>(this IServiceCollection services)

@@ -1,4 +1,4 @@
-using Core.Providers.Exceptions;
+using Core.Providers.Types;
 
 namespace Core.Providers;
 
@@ -21,11 +21,13 @@ internal sealed class ProviderSelectionService : IProviderSelectionService
     public async Task<Provider?> ResolveByTypeAsync(string type, CancellationToken cancellationToken = default)
     {
         var providers = await _providerRepository.FindAsync(cancellationToken);
-        return providers.FirstOrDefault(provider => provider.Type == type);
+        return providers
+            .Where(provider => provider.Status is ProviderStatus.Enable)
+            .FirstOrDefault(provider => provider.Type == type);
     }
 
     public async Task<Provider?> ResolveByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return await _providerRepository.FindByNameAsync(name, cancellationToken);;
+        return await _providerRepository.FindByNameAsync(name, cancellationToken);
     }
 }

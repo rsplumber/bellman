@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.Endpoints.V1.Notifications.Send;
 
-internal sealed class Endpoint : Endpoint<SendNotification>
+file sealed class Endpoint : Endpoint<SendNotification>
 {
     private readonly INotificationService _notificationService;
 
@@ -27,7 +27,7 @@ internal sealed class Endpoint : Endpoint<SendNotification>
     }
 }
 
-internal sealed class EndpointSummary : Summary<Endpoint>
+file sealed class EndpointSummary : Summary<Endpoint>
 {
     public EndpointSummary()
     {
@@ -37,7 +37,7 @@ internal sealed class EndpointSummary : Summary<Endpoint>
     }
 }
 
-internal sealed class RequestValidator : Validator<SendNotification>
+file sealed class RequestValidator : Validator<SendNotification>
 {
     public RequestValidator()
     {
