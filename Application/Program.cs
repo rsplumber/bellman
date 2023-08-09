@@ -7,6 +7,7 @@ using Elastic.Apm.NetCoreAll;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using KunderaNet.FastEndpoints.Authorization;
+using KunderaNet.Services.Authorization.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseKestrel();
@@ -23,7 +24,6 @@ builder.Services.AddHealthChecks();
 builder.Services.AddCors();
 builder.Services.AddFastEndpoints();
 
-
 builder.Services.SwaggerDocument(settings =>
 {
     settings.DocumentSettings = generatorSettings =>
@@ -38,15 +38,21 @@ builder.Services.SwaggerDocument(settings =>
 });
 
 builder.Services.AddAuthentication(KunderaDefaults.Scheme)
-    .AddKundera(builder.Configuration);
+    .AddKundera(builder.Configuration, k => k.UseHttpService(builder.Configuration));
 builder.Services.AddAuthorization();
-
+builder.Services.AddCore(builder.Configuration);
+builder.Services.AddData(builder.Configuration);
+builder.Services.AddInMemoryData();
+builder.Services.AddNotificationService(builder.Configuration);
 builder.Services.AddCap(options =>
 {
-    options.FailedRetryCount = 2;
+    options.FailedRetryCount = 3;
+    options.FailedRetryInterval = 30;
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.JsonSerializerOptions.IgnoreReadOnlyFields = true;
-    options.SucceedMessageExpiredAfter = 2;
+    options.SucceedMessageExpiredAfter = 30;
+    options.FailedMessageExpiredAfter = 60 * 20;
+
     options.UseRabbitMQ(op =>
     {
         op.HostName = builder.Configuration.GetValue<string>("RabbitMQ:HostName") ?? throw new ArgumentNullException("RabbitMQ:HostName", "Enter RabbitMQ:HostName in app settings");
@@ -60,12 +66,6 @@ builder.Services.AddCap(options =>
         sqlOptions.Schema = "events";
     });
 });
-
-builder.Services.AddCore(builder.Configuration);
-builder.Services.AddData(builder.Configuration);
-builder.Services.AddInMemoryData();
-builder.Services.AddNotificationService(builder.Configuration);
-
 var app = builder.Build();
 
 app.UseNotificationCenter(builder.Configuration);
@@ -85,7 +85,6 @@ app.UseFastEndpoints(config =>
     config.Endpoints.RoutePrefix = "api";
     config.Versioning.Prefix = "v";
     config.Versioning.PrependToRoute = true;
-    config.Endpoints.Filter = ep => ep.EndpointTags?.Contains("hidden") is not true;
 });
 
 

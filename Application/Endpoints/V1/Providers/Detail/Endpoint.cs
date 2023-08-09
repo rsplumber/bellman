@@ -16,7 +16,7 @@ file sealed class Endpoint : Endpoint<Request, ProviderResponse>
     public override void Configure()
     {
         Get("providers/{name}");
-        Permissions("bellman_providers_details");
+        Permissions("providers_details");
         Version(1);
     }
 

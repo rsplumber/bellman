@@ -18,7 +18,7 @@ file sealed class Endpoint : Endpoint<Request, ProviderResponse>
     public override void Configure()
     {
         Patch("providers/{name}/toggle");
-        Permissions("bellman_providers_toggle");
+        Permissions("providers_toggle");
         Version(1);
     }
 
