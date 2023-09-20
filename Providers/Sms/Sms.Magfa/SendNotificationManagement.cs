@@ -9,12 +9,14 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
     private const string Username = "sarmaye_41925";
     private const string Password = "YEfVjZSomtLHIPKW";
     private const string SenderNumber = "98300041925";
-    private readonly IHttpClientFactory _clientFactory;
     private const string ApiUrl = "http/sms/v2/send";
+    private readonly HttpClient _client;
 
     public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory) : base(capPublisher, notificationRepository)
     {
-        _clientFactory = clientFactory;
+        _client = clientFactory.CreateClient(ProviderName);
+        _client.DefaultRequestHeaders.Add("Username", Username);
+        _client.DefaultRequestHeaders.Add("Password", Password);
     }
 
     public override string ProviderName => "magfa";
@@ -25,10 +27,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
 
     protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default)
     {
-        var client = _clientFactory.CreateClient("magfa");
-        client.DefaultRequestHeaders.Add("Username", Username);
-        client.DefaultRequestHeaders.Add("Password", Password);
-        var httpResponseMessage = await client.PostAsJsonAsync(ApiUrl, new
+        var httpResponseMessage = await _client.PostAsJsonAsync(ApiUrl, new
         {
             senders = new List<string> { SenderNumber },
             messages = new List<string> { content },
@@ -39,10 +38,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
 
     protected override async Task<bool> SendBatchNotificationAsync(string content, string[] to, CancellationToken cancellationToken = default)
     {
-        var client = _clientFactory.CreateClient("magfa");
-        client.DefaultRequestHeaders.Add("Username", Username);
-        client.DefaultRequestHeaders.Add("Password", Password);
-        var httpResponseMessage = await client.PostAsJsonAsync(ApiUrl, new
+        var httpResponseMessage = await _client.PostAsJsonAsync(ApiUrl, new
         {
             senders = new List<string> { SenderNumber },
             messages = new List<string> { content },

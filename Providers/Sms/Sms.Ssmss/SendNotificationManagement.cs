@@ -9,12 +9,15 @@ public class SendNotificationManagement : AbstractNotificationManagement
     private const string Username = "sarmayehbulk";
     private const string Password = "Sabas0ft123@";
     private const string SenderNumber = "10007666000000";
-    private readonly IHttpClientFactory _clientFactory;
+    private readonly HttpClient _client;
     private const string ApiUrl = "rest/sms_send?";
 
     public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory) : base(capPublisher, notificationRepository)
     {
-        _clientFactory = clientFactory;
+        _client = clientFactory.CreateClient(ProviderName);
+        _client.DefaultRequestHeaders
+            .Accept
+            .Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
     }
 
     public override string ProviderName => "ssmss";
@@ -25,11 +28,6 @@ public class SendNotificationManagement : AbstractNotificationManagement
 
     protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default)
     {
-        var client = _clientFactory.CreateClient("ssmss");
-        client.DefaultRequestHeaders
-            .Accept
-            .Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-
         var parameters = new Dictionary<string, string>
         {
             { "login_username", Username },
@@ -41,7 +39,7 @@ public class SendNotificationManagement : AbstractNotificationManagement
         };
         var encodedContent = new FormUrlEncodedContent(parameters);
 
-        var httpResponseMessage = await client.PostAsync(ApiUrl, encodedContent, cancellationToken);
+        var httpResponseMessage = await _client.PostAsync(ApiUrl, encodedContent, cancellationToken);
         return httpResponseMessage.IsSuccessStatusCode;
     }
 

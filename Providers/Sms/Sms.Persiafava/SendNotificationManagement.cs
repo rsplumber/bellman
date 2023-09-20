@@ -8,12 +8,12 @@ public class SendNotificationManagement : AbstractNotificationManagement
     private const string Username = "sarmayeh";
     private const string Password = "Te@$armayeh#850";
     private const string SenderNumber = "300004373";
-    private readonly IHttpClientFactory _clientFactory;
     private const string ApiUrl = "webservice/rest/sms_send";
+    private readonly HttpClient _client;
 
     public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory) : base(capPublisher, notificationRepository)
     {
-        _clientFactory = clientFactory;
+         _client = clientFactory.CreateClient(ProviderName);
     }
 
     public override string ProviderName => "persiafava";
@@ -24,8 +24,7 @@ public class SendNotificationManagement : AbstractNotificationManagement
 
     protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default)
     {
-        var client = _clientFactory.CreateClient("persiafava");
-        var httpResponseMessage = await client.PostAsync(ApiUrl, new FormUrlEncodedContent(new Dictionary<string, string>
+        var httpResponseMessage = await _client.PostAsync(ApiUrl, new FormUrlEncodedContent(new Dictionary<string, string>
         {
             { "login_username", Username },
             { "login_password", Password },

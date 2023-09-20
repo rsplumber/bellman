@@ -8,6 +8,9 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using KunderaNet.FastEndpoints.Authorization;
 using KunderaNet.Services.Authorization.Http;
+using Sms.Magfa;
+using Sms.Persiafava;
+using Sms.Ssmss;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseKestrel();
@@ -40,10 +43,7 @@ builder.Services.SwaggerDocument(settings =>
 builder.Services.AddAuthentication(KunderaDefaults.Scheme)
     .AddKundera(builder.Configuration, k => k.UseHttpService(builder.Configuration));
 builder.Services.AddAuthorization();
-builder.Services.AddCore(builder.Configuration);
-builder.Services.AddData(builder.Configuration);
-builder.Services.AddInMemoryData();
-builder.Services.AddNotificationService(builder.Configuration);
+
 builder.Services.AddCap(options =>
 {
     options.FailedRetryCount = 3;
@@ -66,8 +66,15 @@ builder.Services.AddCap(options =>
         sqlOptions.Schema = "events";
     });
 });
-var app = builder.Build();
 
+builder.Services.AddCore(builder.Configuration);
+builder.Services.AddData(builder.Configuration);
+builder.Services.AddInMemoryData();
+builder.Services.AddMagfa(builder.Configuration);
+builder.Services.AddPersiafava(builder.Configuration);
+builder.Services.AddSsmss(builder.Configuration);
+
+var app = builder.Build();
 app.UseNotificationCenter(builder.Configuration);
 
 app.UseCors(b => b.AllowAnyHeader()
