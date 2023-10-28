@@ -45,15 +45,9 @@ internal sealed class NotificationService : INotificationService
             provider = await _providerSelectionService.ResolveByTypeAsync(request.Type, cancellationToken);
         }
 
-        if (provider is null)
-        {
-            throw new ProviderNotFoundException();
-        }
+        if (provider is null) throw new ProviderNotFoundException();
 
-        if (provider.Status is not ProviderStatus.Enable)
-        {
-            throw new ProviderDisabledException();
-        }
+        if (provider.Status is not ProviderStatus.Enable) throw new ProviderDisabledException();
 
         await _eventBus.PublishAsync($"{SendNotificationEvent.EventName}.{provider.Type}.{provider.Name}", new SendNotificationEvent
         {
