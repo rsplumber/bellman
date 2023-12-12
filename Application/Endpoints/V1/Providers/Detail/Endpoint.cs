@@ -16,7 +16,7 @@ file sealed class Endpoint : Endpoint<Request, ProviderResponse>
     public override void Configure()
     {
         Get("providers/{name}");
-        Permissions("providers_details");
+        AllowAnonymous();
         Version(1);
     }
 

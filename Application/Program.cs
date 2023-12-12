@@ -46,13 +46,12 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddCap(options =>
 {
-    options.FailedRetryCount = 3;
-    options.FailedRetryInterval = 30;
+    options.FailedRetryCount = 1;
+    options.FailedRetryInterval = 10;
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.JsonSerializerOptions.IgnoreReadOnlyFields = true;
     options.SucceedMessageExpiredAfter = 30;
-    options.FailedMessageExpiredAfter = 60 * 20;
-
+    options.FailedMessageExpiredAfter = 30;
     options.UseRabbitMQ(op =>
     {
         op.HostName = builder.Configuration.GetValue<string>("RabbitMQ:HostName") ?? throw new ArgumentNullException("RabbitMQ:HostName", "Enter RabbitMQ:HostName in app settings");
@@ -98,7 +97,7 @@ app.UseFastEndpoints(config =>
 // if (app.Environment.IsDevelopment())
 // {
 app.UseOpenApi();
-app.UseSwaggerUi3(s => s.ConfigureDefaults());
+app.UseSwaggerUi(s => s.ConfigureDefaults());
 // }
 
 

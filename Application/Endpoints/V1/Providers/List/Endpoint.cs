@@ -15,7 +15,7 @@ file sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
     public override void Configure()
     {
         Get("providers");
-        Permissions("bellman_providers_list");
+        AllowAnonymous();
         Version(1);
     }
 
