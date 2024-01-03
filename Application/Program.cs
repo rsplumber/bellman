@@ -4,6 +4,7 @@ using Core;
 using Data;
 using Data.InMemory;
 using Elastic.Apm.NetCoreAll;
+using Emai.Tes;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using KunderaNet.FastEndpoints.Authorization;
@@ -72,6 +73,7 @@ builder.Services.AddInMemoryData();
 builder.Services.AddMagfa(builder.Configuration);
 builder.Services.AddPersiafava(builder.Configuration);
 builder.Services.AddSsmss(builder.Configuration);
+builder.Services.AddTesEmail(builder.Configuration);
 
 var app = builder.Build();
 app.UseNotificationCenter(builder.Configuration);
