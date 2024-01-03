@@ -22,7 +22,7 @@ public class SendNotificationManagement : AbstractNotificationManagement
 
     public override string ProviderName => "ssmss";
 
-    public override string ProviderType => "email";
+    public override string ProviderType => "sms";
 
     protected override int MaximumRetryCount => 2;
 

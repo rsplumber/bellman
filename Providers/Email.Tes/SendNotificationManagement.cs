@@ -7,7 +7,6 @@ namespace Emai.Tes;
 
 internal sealed class SendNotificationManagement : AbstractNotificationManagement
 {
-    private const string MailAddress = "card@tes.ir";
     private readonly IFluentEmail _fluentEmail;
 
     public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory, IFluentEmail fluentEmail) : base(capPublisher, notificationRepository)
@@ -24,7 +23,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
     protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken)
     {
         await _fluentEmail.To(to)
-            .SetFrom(MailAddress)
+            .Subject("تجارت الکترونیک سرمایه")
             .Body(content)
             .SendAsync();
         return true;
@@ -37,7 +36,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
                 Name = "",
                 EmailAddress = s
             }))
-            .SetFrom(MailAddress)
+            .Subject("تجارت الکترونیک سرمایه")
             .Body(content)
             .SendAsync();
         return true;
