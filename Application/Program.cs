@@ -47,8 +47,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddCap(options =>
 {
-    options.FailedRetryCount = 1;
-    options.FailedRetryInterval = 10;
+    options.FailedRetryCount = 0;
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.JsonSerializerOptions.IgnoreReadOnlyFields = true;
     options.SucceedMessageExpiredAfter = 30;
