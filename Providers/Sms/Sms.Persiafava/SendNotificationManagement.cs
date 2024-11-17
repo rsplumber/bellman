@@ -40,4 +40,14 @@ public class SendNotificationManagement : AbstractNotificationManagement
     {
         throw new NotImplementedException();
     }
+
+    protected override Task<bool> SendNotificationAsync(Guid patternId, string[] parameters, string to, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override Task<bool> SendBatchNotificationAsync(Guid patternId, string[] parameters, string[] to, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

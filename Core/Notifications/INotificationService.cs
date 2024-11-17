@@ -6,7 +6,7 @@ using DotNetCore.CAP;
 
 namespace Core.Notifications;
 
-public sealed record SendNotification
+public sealed record SendNotificationWithContent
 {
     public string Content { get; init; } = default!;
 
@@ -17,9 +17,23 @@ public sealed record SendNotification
     public string? Provider { get; init; }
 }
 
+public sealed record SendNotificationWithPatternId
+{
+    public string[] Parameters { get; init; } = default!;
+    
+    public Guid PatternId { get; init; } = default!;
+
+    public string[] To { get; init; } = default!;
+
+    public string Type { get; init; } = default!;
+
+    public string? Provider { get; init; }
+}
+
 public interface INotificationService
 {
-    Task SendAsync(SendNotification request, CancellationToken cancellationToken = default);
+    Task SendAsync(SendNotificationWithContent request, CancellationToken cancellationToken = default);
+    Task SendAsync(SendNotificationWithPatternId request, CancellationToken cancellationToken = default);
 }
 
 internal sealed class NotificationService : INotificationService
@@ -33,7 +47,7 @@ internal sealed class NotificationService : INotificationService
         _eventBus = eventBus;
     }
 
-    public async Task SendAsync(SendNotification request, CancellationToken cancellationToken = default)
+    public async Task SendAsync(SendNotificationWithContent request, CancellationToken cancellationToken = default)
     {
         Provider? provider;
         if (request.Provider is not null)
@@ -55,5 +69,10 @@ internal sealed class NotificationService : INotificationService
             To = request.To,
             Provider = provider.Name
         }, cancellationToken: cancellationToken);
+    }
+
+    public Task SendAsync(SendNotificationWithPatternId request, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

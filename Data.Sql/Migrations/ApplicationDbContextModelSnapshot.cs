@@ -18,10 +18,52 @@ namespace Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Core.Domains.Jiring.Jiring", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("JiringId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("jiring_id");
+
+                    b.Property<Guid>("PatternId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("pattern_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("jirings", "jiring");
+                });
+
+            modelBuilder.Entity("Core.Domains.Pattern.Pattern", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedDateUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_date_utc");
+
+                    b.Property<string>("Template")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("template");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("patterns", (string)null);
+                });
 
             modelBuilder.Entity("Core.Notifications.Notification", b =>
                 {
@@ -44,6 +86,10 @@ namespace Data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("from");
 
+                    b.Property<List<string>>("Params")
+                        .HasColumnType("text[]")
+                        .HasColumnName("params");
+
                     b.Property<int>("Retry")
                         .HasColumnType("integer")
                         .HasColumnName("retry");
@@ -62,9 +108,24 @@ namespace Data.Migrations
                         .HasColumnType("text")
                         .HasColumnName("type");
 
+                    b.Property<Guid?>("pattern_id")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("pattern_id");
+
                     b.ToTable("notifications", (string)null);
+                });
+
+            modelBuilder.Entity("Core.Notifications.Notification", b =>
+                {
+                    b.HasOne("Core.Domains.Pattern.Pattern", "Pattern")
+                        .WithMany()
+                        .HasForeignKey("pattern_id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Pattern");
                 });
 #pragma warning restore 612, 618
         }

@@ -24,6 +24,10 @@ public abstract class AbstractNotificationManagement
 
     protected abstract Task<bool> SendBatchNotificationAsync(string content, string[] to, CancellationToken cancellationToken);
 
+    protected abstract Task<bool> SendNotificationAsync(Guid patternId , string[] parameters, string to, CancellationToken cancellationToken);
+
+    protected abstract Task<bool> SendBatchNotificationAsync(Guid patternId , string[] parameters, string[] to, CancellationToken cancellationToken);
+    
     protected virtual void Validate(string content, string to)
     {
     }
@@ -65,7 +69,7 @@ public abstract class AbstractNotificationManagement
         bool IsBatchRequest() => req.To.Length > 1;
     }
 
-
+    
     private bool MaximumRetryReached(Notification notification)
     {
         return notification.Retry >= MaximumRetryCount;

@@ -9,8 +9,12 @@ public sealed record SendNotificationEvent
 
     public Guid RequestId { get; set; } = Guid.NewGuid();
 
-    public string Content { get; init; } = default!;
+    public string? Content { get; init; }
 
+    public Guid? PatternId { get; init; }
+
+    public string[]? Parameters { get; init; }
+    
     public string[] To { get; init; } = Array.Empty<string>();
 
     public string Provider { get; init; } = default!;
@@ -29,6 +33,7 @@ internal sealed class SendNotificationEventHandler : ICapSubscribe
     public Task HandleSmsAsync(SendNotificationEvent message)
     {
         var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
+        
         return notificationManagement.SendAsync(new SendNotificationRequest(message.RequestId)
         {
             Content = message.Content,
@@ -57,6 +62,4 @@ internal sealed class SendNotificationEventHandler : ICapSubscribe
             To = message.To
         });
     }
-    
-  
 }

@@ -9,6 +9,8 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using KunderaNet.FastEndpoints.Authorization;
 using KunderaNet.Services.Authorization.Http;
+using Savorboard.CAP.InMemoryMessageQueue;
+using Sms.Jiring;
 using Sms.Magfa;
 using Sms.Persiafava;
 using Sms.Ssmss;
@@ -38,7 +40,7 @@ builder.Services.SwaggerDocument(settings =>
         generatorSettings.AddKunderaAuth();
     };
     settings.EnableJWTBearerAuth = false;
-    settings.MaxEndpointVersion = 1;
+    settings.MaxEndpointVersion = 2;
 });
 
 builder.Services.AddAuthentication(KunderaDefaults.Scheme)
@@ -52,24 +54,27 @@ builder.Services.AddCap(options =>
     options.JsonSerializerOptions.IgnoreReadOnlyFields = true;
     options.SucceedMessageExpiredAfter = 30;
     options.FailedMessageExpiredAfter = 30;
-    options.UseRabbitMQ(op =>
-    {
-        op.HostName = builder.Configuration.GetValue<string>("RabbitMQ:HostName") ?? throw new ArgumentNullException("RabbitMQ:HostName", "Enter RabbitMQ:HostName in app settings");
-        op.UserName = builder.Configuration.GetValue<string>("RabbitMQ:UserName") ?? throw new ArgumentNullException("RabbitMQ:UserName", "Enter RabbitMQ:UserName in app settings");
-        op.Password = builder.Configuration.GetValue<string>("RabbitMQ:Password") ?? throw new ArgumentNullException("RabbitMQ:Password", "Enter RabbitMQ:UserName in app settings");
-        op.ExchangeName = builder.Configuration.GetValue<string>("RabbitMQ:ExchangeName") ?? throw new ArgumentNullException("RabbitMQ:ExchangeName", "Enter RabbitMQ:ExchangeName in app settings");
-    });
-    options.UsePostgreSql(sqlOptions =>
-    {
-        sqlOptions.ConnectionString = builder.Configuration.GetConnectionString("default") ?? throw new ArgumentNullException("connectionString", "Enter connection string in app settings");
-        sqlOptions.Schema = "events";
-    });
+    options.UseInMemoryStorage();
+    options.UseInMemoryMessageQueue();
+    // options.UseRabbitMQ(op =>
+    // {
+    //     op.HostName = builder.Configuration.GetValue<string>("RabbitMQ:HostName") ?? throw new ArgumentNullException("RabbitMQ:HostName", "Enter RabbitMQ:HostName in app settings");
+    //     op.UserName = builder.Configuration.GetValue<string>("RabbitMQ:UserName") ?? throw new ArgumentNullException("RabbitMQ:UserName", "Enter RabbitMQ:UserName in app settings");
+    //     op.Password = builder.Configuration.GetValue<string>("RabbitMQ:Password") ?? throw new ArgumentNullException("RabbitMQ:Password", "Enter RabbitMQ:UserName in app settings");
+    //     op.ExchangeName = builder.Configuration.GetValue<string>("RabbitMQ:ExchangeName") ?? throw new ArgumentNullException("RabbitMQ:ExchangeName", "Enter RabbitMQ:ExchangeName in app settings");
+    // });
+    // options.UsePostgreSql(sqlOptions =>
+    // {
+    //     sqlOptions.ConnectionString = builder.Configuration.GetConnectionString("default") ?? throw new ArgumentNullException("connectionString", "Enter connection string in app settings");
+    //     sqlOptions.Schema = "events";
+    // });
 });
 
 builder.Services.AddCore(builder.Configuration);
 builder.Services.AddData(builder.Configuration);
 builder.Services.AddInMemoryData();
 builder.Services.AddMagfa(builder.Configuration);
+builder.Services.AddJiring(builder.Configuration);
 builder.Services.AddPersiafava(builder.Configuration);
 builder.Services.AddSsmss(builder.Configuration);
 builder.Services.AddTesEmail(builder.Configuration);

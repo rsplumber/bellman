@@ -1,4 +1,5 @@
-﻿using Core.Notifications.Types;
+﻿using Core.Domains.Pattern;
+using Core.Notifications.Types;
 
 namespace Core.Notifications;
 
@@ -7,6 +8,10 @@ public class Notification
     public Guid Id { get; set; }
 
     public string Content { get; init; } = default!;
+    
+    public List<string>? Params { get; init; }
+    
+    public Pattern? Pattern { get; init; }
 
     public string From { get; init; } = default!;
 
