@@ -8,6 +8,9 @@ file sealed class Endpoint : Endpoint<SendNotificationWithPatternId>
 {
     private readonly INotificationService _notificationService;
 
+
+    
+
     public Endpoint(INotificationService notificationService)
     {
         _notificationService = notificationService;
@@ -22,8 +25,8 @@ file sealed class Endpoint : Endpoint<SendNotificationWithPatternId>
 
     public override async Task HandleAsync(SendNotificationWithPatternId req, CancellationToken ct)
     {
-        await _notificationService.SendAsync(req, ct);
-        await SendOkAsync(ct);
+        var res = await _notificationService.SendAsync(req, ct);
+        await SendOkAsync(res, ct);
     }
 }
 

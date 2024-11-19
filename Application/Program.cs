@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Application;
 using Core;
+using Core.Content;
 using Data;
 using Data.InMemory;
 using Elastic.Apm.NetCoreAll;
@@ -71,13 +72,14 @@ builder.Services.AddCap(options =>
 });
 
 builder.Services.AddCore(builder.Configuration);
+builder.Services.AddCorePattern(builder.Configuration);
 builder.Services.AddData(builder.Configuration);
 builder.Services.AddInMemoryData();
-builder.Services.AddMagfa(builder.Configuration);
+// builder.Services.AddMagfa(builder.Configuration);
 builder.Services.AddJiring(builder.Configuration);
-builder.Services.AddPersiafava(builder.Configuration);
+// builder.Services.AddPersiafava(builder.Configuration);
 builder.Services.AddSsmss(builder.Configuration);
-builder.Services.AddTesEmail(builder.Configuration);
+// builder.Services.AddTesEmail(builder.Configuration);
 
 var app = builder.Build();
 app.UseNotificationCenter(builder.Configuration);

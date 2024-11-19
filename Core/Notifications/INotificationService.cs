@@ -1,4 +1,5 @@
 using Core.Events;
+using Core.Events.Pattern;
 using Core.Providers;
 using Core.Providers.Exceptions;
 using Core.Providers.Types;
@@ -20,7 +21,7 @@ public sealed record SendNotificationWithContent
 public sealed record SendNotificationWithPatternId
 {
     public string[] Parameters { get; init; } = default!;
-    
+
     public Guid PatternId { get; init; } = default!;
 
     public string[] To { get; init; } = default!;
@@ -33,7 +34,7 @@ public sealed record SendNotificationWithPatternId
 public interface INotificationService
 {
     Task SendAsync(SendNotificationWithContent request, CancellationToken cancellationToken = default);
-    Task SendAsync(SendNotificationWithPatternId request, CancellationToken cancellationToken = default);
+    Task<SendNotificationResponse> SendAsync(SendNotificationWithPatternId request, CancellationToken cancellationToken = default);
 }
 
 internal sealed class NotificationService : INotificationService
@@ -71,8 +72,39 @@ internal sealed class NotificationService : INotificationService
         }, cancellationToken: cancellationToken);
     }
 
-    public Task SendAsync(SendNotificationWithPatternId request, CancellationToken cancellationToken = default)
+    public async Task<SendNotificationResponse> SendAsync(SendNotificationWithPatternId request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        Provider? provider;
+        if (request.Provider is not null)
+        {
+            provider = await _providerSelectionService.ResolveByNameAsync(request.Provider, cancellationToken);
+        }
+        else
+        {
+            provider = await _providerSelectionService.ResolveByTypeAsync(request.Type, cancellationToken);
+        }
+
+        if (provider is null) throw new ProviderNotFoundException();
+
+        if (provider.Status is not ProviderStatus.Enable) throw new ProviderDisabledException();
+
+        var message = new SendNotificationPatternEvent
+        {
+            PatternId = request.PatternId,
+            Parameters = request.Parameters,
+            To = request.To,
+            Provider = provider.Name
+        };
+        await _eventBus.PublishAsync($"{SendNotificationPatternEvent.EventName}.{provider.Type}.{provider.Name}", message, cancellationToken: cancellationToken);
+
+        var response = new SendNotificationResponse()
+        {
+            Date = message.To.Select(receiver => new SendNotificationResponse.SendNotificationResponseModel()
+            {
+                Id = message.RequestId,
+                PhoneNumber = receiver
+            }).ToList()
+        };
+        return response;
     }
 }
