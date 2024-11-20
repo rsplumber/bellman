@@ -22,12 +22,19 @@ public class Notification
     public int Retry { get; private set; }
 
     public NotificationStatus Status { get; private set; } = NotificationStatus.Sending;
+    
+    public NotificationDeliveryStatus? DeliveryStatus { get; private set; } = NotificationDeliveryStatus.Unknown;
 
     public DateTime CreatedDateUtc { get; internal set; } = DateTime.UtcNow;
+    
 
     public void IncrementRetry() => Retry += 1;
 
     public void Failed() => Status = NotificationStatus.Failed;
 
     public void Sent() => Status = NotificationStatus.Sent;
+
+    public void SetDeliveryStatus(NotificationDeliveryStatus status) => DeliveryStatus = status;
+    public void Delivered() => DeliveryStatus = NotificationDeliveryStatus.Delivered;
+    public void UnDelivered() => DeliveryStatus = NotificationDeliveryStatus.UnDelivered;
 }

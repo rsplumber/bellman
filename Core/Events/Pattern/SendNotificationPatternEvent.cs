@@ -9,11 +9,12 @@ public sealed record SendNotificationPatternEvent
 
     public Guid RequestId { get; set; } = Guid.NewGuid();
 
-    public Guid PatternId { get; init; }
+    public Guid? PatternId { get; init; }
 
     public string[] Parameters { get; init; } = [];
+    public string? Content { get; init; }
 
-    public string[] To { get; init; } = [];
+    public string To { get; init; } = default!;
 
     public string Provider { get; init; } = default!;
 }
@@ -36,7 +37,7 @@ internal sealed class SendNotificationPatternEventHandler : ICapSubscribe
         {
             PatternId = message.PatternId,
             Parameters = message.Parameters,
-            To = message.To
+            To = [message.To]
         });
     }
 
@@ -48,7 +49,7 @@ internal sealed class SendNotificationPatternEventHandler : ICapSubscribe
         {
             PatternId = message.PatternId,
             Parameters = message.Parameters,
-            To = message.To
+            To = [message.To]
         });
     }
 
@@ -60,7 +61,7 @@ internal sealed class SendNotificationPatternEventHandler : ICapSubscribe
         {
             PatternId = message.PatternId,
             Parameters = message.Parameters,
-            To = message.To
+            To = [message.To]
         });
     }
 }

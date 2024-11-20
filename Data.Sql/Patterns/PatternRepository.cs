@@ -1,5 +1,4 @@
-﻿using Core.Domains.Jiring;
-using Core.Domains.Jirings;
+﻿using Core.Domains.Jirings;
 using Core.Domains.Pattern;
 using Microsoft.EntityFrameworkCore;
 

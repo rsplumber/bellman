@@ -1,4 +1,4 @@
-﻿namespace Core.Domains.Jiring;
+﻿namespace Core.Domains.Jirings;
 
 public class Jiring
 {

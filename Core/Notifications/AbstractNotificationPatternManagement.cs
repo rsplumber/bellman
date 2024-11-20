@@ -1,6 +1,7 @@
 ﻿using Core.Domains.Pattern;
 using Core.Events;
 using Core.Events.Pattern;
+using Core.Notifications.Types;
 using DotNetCore.CAP;
 
 namespace Core.Notifications;
@@ -25,13 +26,11 @@ public abstract class AbstractNotificationPatternManagement
     protected abstract int MaximumRetryCount { get; }
 
 
-    protected abstract Task<SendNotification?> SendNotificationAsync(Guid patternId, string[] parameters, string to, CancellationToken cancellationToken);
+    protected abstract Task<SendNotification?> SendNotificationAsync(Notification notification, Guid? patternId, string[]? parameters, string to, string? content, CancellationToken cancellationToken);
 
-    protected abstract Task<bool> SendBatchNotificationAsync(Guid patternId, string[] parameters, string[] to, CancellationToken cancellationToken);
+    //protected abstract Task<SendNotification?> SendBatchNotificationAsync(Guid patternId, string[] parameters, string[] to, CancellationToken cancellationToken);
 
-    // protected abstract Task<bool> GetDeliveryStatusNotificationAsync(Guid patternId, string[] parameters, string to, CancellationToken cancellationToken);
-    //
-    // protected abstract Task<bool> GetBatchDeliveryStatusNotificationAsync(Guid patternId, string[] parameters, string[] to, CancellationToken cancellationToken);
+    protected abstract Task<GetDeliveryNotification?> GetDeliveryStatusNotificationAsync(Guid id, CancellationToken cancellationToken);
 
     public async Task SendAsync(SendNotificationWithPatternRequest req, CancellationToken cancellationToken = default)
     {
@@ -43,15 +42,8 @@ public abstract class AbstractNotificationPatternManagement
             return;
         }
 
-        SendNotification? notificationSent = null;
-        if (IsBatchRequest())
-        {
-            //notificationSent = await SendBatchNotificationAsync(req.PatternId, req.Parameters, req.To, cancellationToken);
-        }
-        else
-        {
-            notificationSent = await SendNotificationAsync(req.PatternId, req.Parameters, req.To[0], cancellationToken);
-        }
+        var notificationSent = await SendNotificationAsync(notification, req.PatternId, req.Parameters, req.To.First(), req.Content, cancellationToken);
+
 
         if (notificationSent is null)
         {
@@ -59,14 +51,19 @@ public abstract class AbstractNotificationPatternManagement
             return;
         }
 
-        //notification.
         await _notificationRepository.UpdateAsync(notification, cancellationToken);
-        
-        await RaiseSentEventAsync(req.Id, cancellationToken);
 
-        bool IsBatchRequest() => req.To.Length > 1;
-        
-        
+        await RaiseSentEventAsync(req.Id, cancellationToken);
+    }
+
+    public async Task<GetDeliveryNotification?> GetDeliveryAsync(DeliveryStatusNotificationRequest req, CancellationToken cancellationToken = default)
+    {
+        var delivery = await GetDeliveryStatusNotificationAsync(req.NotificationId, cancellationToken);
+        if (delivery is null) return delivery;
+        var notification = await _notificationRepository.FindAsync(req.NotificationId, cancellationToken);
+        notification?.SetDeliveryStatus(delivery.Status);
+        await _notificationRepository.UpdateAsync(notification, cancellationToken);
+        return delivery;
     }
 
 
@@ -78,7 +75,12 @@ public abstract class AbstractNotificationPatternManagement
     private async Task<Notification> GetOrAddNotification(SendNotificationWithPatternRequest req, CancellationToken cancellationToken)
     {
         var notification = await _notificationRepository.FindAsync(req.Id, cancellationToken);
-        var pattern = await _patternRepository.FindAsync(req.PatternId, cancellationToken);
+        Pattern? pattern = null;
+        if (req.PatternId is not null)
+        {
+            pattern = await _patternRepository.FindAsync((Guid)req.PatternId, cancellationToken);
+        }
+
         if (notification is null)
         {
             var createdNotification = new Notification
@@ -86,8 +88,8 @@ public abstract class AbstractNotificationPatternManagement
                 Id = req.Id,
                 Type = ProviderType,
                 From = ProviderName,
-                Params = req.Parameters.ToList(),
-                Content = "",
+                Params = req.Parameters?.ToList(),
+                Content = string.Format(pattern?.Template ?? string.Empty, req.Parameters?.Cast<object>().ToArray() ?? []),
                 Pattern = pattern,
                 To = req.To.ToList(),
             };
@@ -105,9 +107,9 @@ public abstract class AbstractNotificationPatternManagement
         await _eventBus.PublishAsync($"{SendNotificationPatternEvent.EventName}.{ProviderType}.{ProviderName}", new SendNotificationPatternEvent()
         {
             RequestId = req.Id,
-            Parameters = req.Parameters,
+            Parameters = req.Parameters ?? [],
             PatternId = req.PatternId,
-            To = req.To,
+            To = req.To.First(),
             Provider = ProviderName
         }, cancellationToken: cancellationToken);
     }
@@ -131,5 +133,10 @@ public abstract class AbstractNotificationPatternManagement
 
 public class SendNotification
 {
-    public required List<string> Date { get; init; }
+    public required string MessageId { get; init; }
+}
+
+public class GetDeliveryNotification
+{
+    public required NotificationDeliveryStatus Status { get; init; }
 }

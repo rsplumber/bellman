@@ -1,4 +1,5 @@
 ﻿using Core.Domains.Jirings;
+using Core.Domains.Jirings.Notification;
 using Core.Domains.Pattern;
 using Core.Notifications;
 using Data.Jirings;
@@ -20,6 +21,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<IPatternRepository, PatternRepository>();
         services.AddScoped<IJiringRepository, JiringRepository>();
+        services.AddScoped<IJiringNotificationRepository, JiringNotificationRepository>();
         services.AddScoped<INotificationDetailsQuery, NotificationDetailsQuery>();
         services.AddScoped<INotificationListQuery, NotificationListQuery>();
     }

@@ -3,7 +3,7 @@
 public class SendNotificationResponse
 {
     
-    public required List<SendNotificationResponseModel> Date { get; init; }
+    public required SendNotificationResponseModel Date { get; init; }
 
 
     public record SendNotificationResponseModel

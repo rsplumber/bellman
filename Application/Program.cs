@@ -41,6 +41,20 @@ builder.Services.SwaggerDocument(settings =>
         generatorSettings.AddKunderaAuth();
     };
     settings.EnableJWTBearerAuth = false;
+    settings.MinEndpointVersion = 1;
+    settings.MaxEndpointVersion = 1;
+});
+builder.Services.SwaggerDocument(settings =>
+{
+    settings.DocumentSettings = generatorSettings =>
+    {
+        generatorSettings.Title = "Bellman notification center - WebApi";
+        generatorSettings.DocumentName = "v2";
+        generatorSettings.Version = "v2";
+        generatorSettings.AddKunderaAuth();
+    };
+    settings.EnableJWTBearerAuth = false;
+    settings.MinEndpointVersion = 2;
     settings.MaxEndpointVersion = 2;
 });
 
@@ -75,9 +89,9 @@ builder.Services.AddCore(builder.Configuration);
 builder.Services.AddCorePattern(builder.Configuration);
 builder.Services.AddData(builder.Configuration);
 builder.Services.AddInMemoryData();
-// builder.Services.AddMagfa(builder.Configuration);
+ builder.Services.AddMagfa(builder.Configuration);
 builder.Services.AddJiring(builder.Configuration);
-// builder.Services.AddPersiafava(builder.Configuration);
+builder.Services.AddPersiafava(builder.Configuration);
 builder.Services.AddSsmss(builder.Configuration);
 // builder.Services.AddTesEmail(builder.Configuration);
 

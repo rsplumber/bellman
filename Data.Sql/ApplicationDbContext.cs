@@ -1,4 +1,5 @@
-﻿using Core.Domains.Jiring;
+﻿using Core.Domains.Jirings;
+using Core.Domains.Jirings.Notification;
 using Core.Domains.Pattern;
 using Core.Notifications;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,15 @@ public class ApplicationDbContext : DbContext
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Pattern> Patterns { get; set; }
     public DbSet<Jiring> Jirings { get; set; }
+    
+    public DbSet<JiringNotification> JiringNotifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfiguration(new NotificationEntityTypeConfiguration());
         builder.ApplyConfiguration(new PatternEntityTypeConfiguration());
         builder.ApplyConfiguration(new JiringEntityTypeConfiguration());
+        builder.ApplyConfiguration(new JiringNotificationEntityTypeConfiguration());
         base.OnModelCreating(builder);
     }
 
@@ -76,10 +80,16 @@ public class ApplicationDbContext : DbContext
             builder.Property(notification => notification.Status)
                 .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasColumnName("status");
+            
+            builder.Property(notification => notification.DeliveryStatus)
+                .UsePropertyAccessMode(PropertyAccessMode.Property)
+                .HasColumnName("delivery_status")
+                .IsRequired(false);
 
             builder.Property(notification => notification.CreatedDateUtc)
                 .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasColumnName("created_date_utc");
+            
         }
     } 
     
@@ -122,6 +132,29 @@ public class ApplicationDbContext : DbContext
             builder.Property(pattern => pattern.JiringId)
                 .UsePropertyAccessMode(PropertyAccessMode.Property)
                 .HasColumnName("jiring_id");
+        }
+    }
+    private class JiringNotificationEntityTypeConfiguration : IEntityTypeConfiguration<JiringNotification>
+    {
+        public void Configure(EntityTypeBuilder<JiringNotification> builder)
+        {
+            builder.ToTable("jirings_notifications" , "jiring")
+                .HasKey(pattern => pattern.Id);
+
+            builder.Property(pattern => pattern.Id)
+                .UsePropertyAccessMode(PropertyAccessMode.Property)
+                .HasColumnName("id");
+
+            builder.Property(pattern => pattern.MessageId)
+                .UsePropertyAccessMode(PropertyAccessMode.Property)
+                .HasColumnName("message_id");
+            
+           
+            builder.HasOne(model => model.Notification)
+                .WithOne()
+                .HasForeignKey<JiringNotification>("notification_id")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
         }
     }
 }
