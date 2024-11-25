@@ -23,7 +23,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
 
     public override string ProviderType => "sms";
 
-    protected override int MaximumRetryCount => 2;
+    protected override int MaximumRetryCount => 0;
 
     protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default)
     {
