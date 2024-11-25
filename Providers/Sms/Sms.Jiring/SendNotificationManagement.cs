@@ -36,7 +36,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
 
     public override string ProviderType => "sms";
 
-    protected override int MaximumRetryCount => 2;
+    protected override int MaximumRetryCount => 1;
 
 
     protected override async Task<SendNotification?> SendNotificationAsync(Notification notification, Guid? patternId, string[]? parameters, string to, string? content, CancellationToken cancellationToken)
@@ -56,6 +56,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
             parameters = parameters,
             destinations = new[] { phone },
         }, cancellationToken);
+
         if (!httpResponseMessage.IsSuccessStatusCode) return null;
         var response = await httpResponseMessage.Content.ReadFromJsonAsync<JiringResponse>(cancellationToken: cancellationToken);
         if (response != null)

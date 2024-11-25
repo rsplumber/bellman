@@ -15,5 +15,16 @@ public class Pattern
 
     public string Template { get; init; } = default!;
 
+    public List<Parameter>? Parameters { get; init; }
+
+    public string? Description { get; init; }
+
     public DateTime CreatedDateUtc { get; internal set; } = DateTime.UtcNow;
+
+
+    public record Parameter
+    {
+        public string? Key { get; init; }
+        public string? Value { get; init; }
+    }
 }

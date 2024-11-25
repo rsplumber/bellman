@@ -1,3 +1,5 @@
+using Core.Domains.Pattern;
+using Core.Domains.Pattern.Exceptions;
 using Core.Events;
 using Core.Events.Pattern;
 using Core.Providers;
@@ -15,7 +17,7 @@ public sealed record SendNotificationWithContent
 
     public string Type { get; init; } = default!;
 
-    public string? Provider { get; init; }
+    public string? Provider { get; set; }
 }
 
 public sealed record SendNotificationWithPatternId
@@ -51,13 +53,15 @@ internal sealed class NotificationService : INotificationService
     private readonly IProviderSelectionService _providerSelectionService;
     private readonly IEnumerable<AbstractNotificationPatternManagement> _notificationManagements;
     private readonly INotificationRepository _notificationRepository;
+    private readonly IPatternRepository _patternRepository;
 
-    public NotificationService(IProviderSelectionService providerSelectionService, ICapPublisher eventBus, IEnumerable<AbstractNotificationPatternManagement> notificationManagements, INotificationRepository notificationRepository)
+    public NotificationService(IProviderSelectionService providerSelectionService, ICapPublisher eventBus, IEnumerable<AbstractNotificationPatternManagement> notificationManagements, INotificationRepository notificationRepository, IPatternRepository patternRepository)
     {
         _providerSelectionService = providerSelectionService;
         _eventBus = eventBus;
         _notificationManagements = notificationManagements;
         _notificationRepository = notificationRepository;
+        _patternRepository = patternRepository;
     }
 
     public async Task SendAsync(SendNotificationWithContent request, CancellationToken cancellationToken = default)
@@ -76,7 +80,7 @@ internal sealed class NotificationService : INotificationService
 
         if (provider.Status is not ProviderStatus.Enable) throw new ProviderDisabledException();
 
-        await _eventBus.PublishAsync($"{SendNotificationPatternEvent.EventName}.{provider.Type}.{provider.Name}", new SendNotificationPatternEvent()
+        await _eventBus.PublishAsync($"{SendNotificationEvent.EventName}.{provider.Type}.persiafava", new SendNotificationPatternEvent()
         {
             Content = request.Content,
             To = request.To.FirstOrDefault() ?? string.Empty,
@@ -86,6 +90,10 @@ internal sealed class NotificationService : INotificationService
 
     public async Task<SendNotificationResponse> SendAsync(SendNotificationWithPatternId request, CancellationToken cancellationToken = default)
     {
+        var pattern = await _patternRepository.FindAsync(request.PatternId, cancellationToken);
+        if (pattern is null) throw new PatternNotFoundException();
+        if (pattern?.Parameters?.Count != request.Parameters.Length) throw new PatternInvalidParametersException();
+
         Provider? provider;
         if (request.Provider is not null)
         {
@@ -107,7 +115,7 @@ internal sealed class NotificationService : INotificationService
             To = request.To,
             Provider = provider.Name
         };
-        await _eventBus.PublishAsync($"{SendNotificationPatternEvent.EventName}.{provider.Type}.{provider.Name}", message, cancellationToken: cancellationToken);
+        await _eventBus.PublishAsync($"{SendNotificationPatternEvent.EventName}.{provider.Type}.jiring", message, cancellationToken: cancellationToken);
 
         var response = new SendNotificationResponse()
         {

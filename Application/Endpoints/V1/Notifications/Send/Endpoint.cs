@@ -22,6 +22,7 @@ file sealed class Endpoint : Endpoint<SendNotificationWithContent>
 
     public override async Task HandleAsync(SendNotificationWithContent req, CancellationToken ct)
     {
+        req.Provider = "persiafava";
         await _notificationService.SendAsync(req, ct);
         await SendOkAsync(ct);
     }

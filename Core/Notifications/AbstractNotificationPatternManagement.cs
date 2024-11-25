@@ -89,7 +89,7 @@ public abstract class AbstractNotificationPatternManagement
                 Type = ProviderType,
                 From = ProviderName,
                 Params = req.Parameters?.ToList(),
-                Content = string.Format(pattern?.Template ?? string.Empty, req.Parameters?.Cast<object>().ToArray() ?? []),
+                Content = req.Content ?? string.Format(pattern?.Template ?? string.Empty, req.Parameters?.Cast<object>().ToArray() ?? []),
                 Pattern = pattern,
                 To = req.To.ToList(),
             };

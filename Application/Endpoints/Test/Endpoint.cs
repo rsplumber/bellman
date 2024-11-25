@@ -6,14 +6,20 @@ using FluentValidation;
 
 namespace Application.Endpoints.Test;
 
-file sealed class Endpoint : Endpoint<SendNotificationWithContent>
+file sealed class Endpoint : EndpointWithoutRequest<List<Endpoint.Response>>
 {
     private readonly ApplicationDbContext _dbContext;
+
+    public record Response
+    {
+        public string Template { get; set; } = default!;
+
+        public List<Pattern.Parameter>? Parameters { get; set; }
+    }
 
     public Endpoint(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-
     }
 
     public override void Configure()
@@ -23,11 +29,15 @@ file sealed class Endpoint : Endpoint<SendNotificationWithContent>
         Version(1);
     }
 
-    public override async Task HandleAsync(SendNotificationWithContent req, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        
-
-        await SendOkAsync(ct);
+        var res = _dbContext.Patterns.Select(pattern => new
+            Response()
+            {
+                Template = pattern.Template,
+                Parameters = pattern.Parameters
+            }).ToList();
+        await SendOkAsync(res, ct);
     }
 }
 

@@ -61,7 +61,7 @@ builder.Services.SwaggerDocument(settings =>
 builder.Services.AddAuthentication(KunderaDefaults.Scheme)
     .AddKundera(builder.Configuration, k => k.UseHttpService(builder.Configuration));
 builder.Services.AddAuthorization();
-
+builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
 builder.Services.AddCap(options =>
 {
     options.FailedRetryCount = 0;
@@ -102,7 +102,7 @@ app.UseCors(b => b.AllowAnyHeader()
     .AllowAnyMethod()
     .SetIsOriginAllowed(_ => true)
     .AllowCredentials());
-
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();
