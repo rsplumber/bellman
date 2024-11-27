@@ -115,7 +115,7 @@ internal sealed class NotificationService : INotificationService
             To = request.To,
             Provider = provider.Name
         };
-        await _eventBus.PublishAsync($"{SendNotificationPatternEvent.EventName}.{provider.Type}.jiring", message, cancellationToken: cancellationToken);
+        await _eventBus.PublishAsync($"{SendNotificationPatternEvent.EventName}.{provider.Type}.{provider.Name}", message, cancellationToken: cancellationToken);
 
         var response = new SendNotificationResponse()
         {
