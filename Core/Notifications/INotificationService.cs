@@ -119,7 +119,7 @@ internal sealed class NotificationService : INotificationService
 
         var response = new SendNotificationResponse()
         {
-            Date = new SendNotificationResponse.SendNotificationResponseModel()
+            Data = new SendNotificationResponse.SendNotificationResponseModel()
             {
                 Id = message.RequestId,
                 PhoneNumber = message.To
