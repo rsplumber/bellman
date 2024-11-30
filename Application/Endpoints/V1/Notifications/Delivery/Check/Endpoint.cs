@@ -16,7 +16,7 @@ file sealed class Endpoint : Endpoint<DeliveryStatusRequest>
 
     public override void Configure()
     {
-        Post("notifications/delivery/status");
+        Post("notifications/{id}/delivery/status");
         AllowAnonymous();
         Version(1);
     }

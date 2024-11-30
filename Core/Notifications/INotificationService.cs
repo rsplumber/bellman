@@ -2,6 +2,7 @@ using Core.Domains.Pattern;
 using Core.Domains.Pattern.Exceptions;
 using Core.Events;
 using Core.Events.Pattern;
+using Core.Notifications.Exceptions;
 using Core.Providers;
 using Core.Providers.Exceptions;
 using Core.Providers.Types;
@@ -131,7 +132,7 @@ internal sealed class NotificationService : INotificationService
     public async Task<DeliveryStatusNotificationResponse?> DeliveryStatusAsync(DeliveryStatusRequest request, CancellationToken cancellationToken = default)
     {
         var notification = await _notificationRepository.FindAsync(request.Id, cancellationToken);
-        if (notification == null) return null;
+        if (notification == null) throw new NotificationNotFoundException();
 
         var provider = await _providerSelectionService.ResolveByNameAsync(notification.From, cancellationToken);
         //if (provider == null) return null;
