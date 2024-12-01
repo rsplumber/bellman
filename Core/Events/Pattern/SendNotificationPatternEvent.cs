@@ -28,7 +28,7 @@ internal sealed class SendNotificationPatternEventHandler : ICapSubscribe
         _notificationManagements = notificationManagement;
     }
 
-    [CapSubscribe("bellman.notification.pattern.send.sms.persiafava", Group = "bellman.notification.pattern.send.sms.queue")]
+    [CapSubscribe("bellman.notification.pattern.send.sms.*", Group = "bellman.notification.pattern.send.sms.queue")]
     public Task HandleSmsAsync(SendNotificationPatternEvent message)
     {
         var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);

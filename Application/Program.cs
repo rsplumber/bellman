@@ -10,7 +10,6 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using KunderaNet.FastEndpoints.Authorization;
 using KunderaNet.Services.Authorization.Http;
-using Savorboard.CAP.InMemoryMessageQueue;
 using Sms.Jiring;
 using Sms.Magfa;
 using Sms.Persiafava;

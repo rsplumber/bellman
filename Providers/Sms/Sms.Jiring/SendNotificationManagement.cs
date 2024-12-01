@@ -1,11 +1,13 @@
 ﻿using System.Buffers.Text;
 using System.Net.Http.Json;
+using System.Text;
 using Core.Domains.Jirings;
 using Core.Domains.Jirings.Notification;
 using Core.Domains.Pattern;
 using Core.Notifications;
 using Core.Notifications.Types;
 using DotNetCore.CAP;
+using Newtonsoft.Json;
 
 namespace Sms.Jiring;
 
@@ -50,13 +52,21 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
         if (jiringId is null) return null;
 
         var phone = to.PhoneNumberToJiringNumber();
-        var httpResponseMessage = await _client.PostAsJsonAsync(ApiUrl, new
+
+        var contentReq = new
         {
             patternId = jiringId.JiringId,
             parameters = parameters,
             destinations = new[] { phone },
-        }, cancellationToken);
-
+        };
+        var json = JsonConvert.SerializeObject(contentReq);
+        var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+        jsonContent.Headers.ContentLength = Encoding.UTF8.GetByteCount(json);
+        var request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
+        {
+            Content = jsonContent
+        };
+        var httpResponseMessage = await _client.SendAsync(request, cancellationToken);
         if (!httpResponseMessage.IsSuccessStatusCode) return null;
         var response = await httpResponseMessage.Content.ReadFromJsonAsync<JiringResponse>(cancellationToken: cancellationToken);
         if (response != null)
