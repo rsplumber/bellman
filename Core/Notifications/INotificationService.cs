@@ -133,6 +133,8 @@ internal sealed class NotificationService : INotificationService
     {
         var notification = await _notificationRepository.FindAsync(request.Id, cancellationToken);
         if (notification == null) throw new NotificationNotFoundException();
+        if (notification?.To.Contains(request.PhoneNumber) == false) throw new NotificationNotFoundException();
+
 
         var provider = await _providerSelectionService.ResolveByNameAsync(notification.From, cancellationToken);
         //if (provider == null) return null;
