@@ -58,9 +58,12 @@ public class SendNotificationManagement : AbstractNotificationPatternManagement
         };
     }
 
-    protected override Task<GetDeliveryNotification?> GetDeliveryStatusNotificationAsync(Guid id, CancellationToken cancellationToken)
+    protected override  Task<GetDeliveryNotification?> GetDeliveryStatusNotificationAsync(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return Task.FromResult<GetDeliveryNotification?>(new GetDeliveryNotification()
+        {
+            Status = 0
+        });
     }
 
     private record PersiaFavaResponse
