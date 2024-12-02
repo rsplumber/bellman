@@ -98,11 +98,19 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
                 Status = NotificationDeliveryStatus.Unknown
             };
         }
-
-        var httpResponseMessage = await _client.PostAsJsonAsync("api/message/getdlr", new string[]
+        var contentReq = new string[]
         {
             jiring.MessageId
-        }, cancellationToken);
+        };
+        var json = JsonConvert.SerializeObject(contentReq);
+        var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+        jsonContent.Headers.ContentLength = Encoding.UTF8.GetByteCount(json);
+        var request = new HttpRequestMessage(HttpMethod.Post, "api/message/getdlr")
+        {
+            Content = jsonContent
+        };
+        var httpResponseMessage = await _client.SendAsync(request, cancellationToken);
+        
         if (!httpResponseMessage.IsSuccessStatusCode) return null;
         var response = await httpResponseMessage.Content.ReadFromJsonAsync<JiringDeliveryResponse>(cancellationToken: cancellationToken);
 
