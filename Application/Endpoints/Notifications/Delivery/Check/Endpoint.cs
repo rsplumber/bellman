@@ -2,7 +2,7 @@ using Core.Notifications;
 using FastEndpoints;
 using FluentValidation;
 
-namespace Application.Endpoints.V1.Notifications.Delivery.Check;
+namespace Application.Endpoints.Notifications.Delivery.Check;
 
 file sealed class Endpoint : Endpoint<DeliveryStatusRequest>
 {

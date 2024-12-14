@@ -1,31 +1,29 @@
-using Core.Providers;
 using FastEndpoints;
 using FluentValidation;
 using Queries.Providers;
 
-namespace Application.Endpoints.V1.Providers.Toggle;
+namespace Application.Endpoints.Providers.Detail;
 
 file sealed class Endpoint : Endpoint<Request, ProviderResponse>
 {
-    private readonly IProviderService _providerService;
+    private readonly IProviderDetailsQuery _providerDetailsQuery;
 
-    public Endpoint(IProviderService providerService)
+    public Endpoint(IProviderDetailsQuery providerDetailsQuery)
     {
-        _providerService = providerService;
+        _providerDetailsQuery = providerDetailsQuery;
     }
-
 
     public override void Configure()
     {
-        Patch("providers/{name}/toggle");
+        Get("providers/{name}");
         AllowAnonymous();
         Version(1);
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        await _providerService.ToggleAsync(req.Name, ct);
-        await SendOkAsync(ct);
+        var response = await _providerDetailsQuery.QueryAsync(req.Name, ct);
+        await SendOkAsync(response, ct);
     }
 }
 
@@ -33,9 +31,9 @@ file sealed class EndpointSummary : Summary<Endpoint>
 {
     public EndpointSummary()
     {
-        Summary = "Toggle provider";
-        Description = "Toggle on/off a provider by name";
-        Response(200, "Provider successfully toggled");
+        Summary = "Get provider detail in the system";
+        Description = "Get provider detail in the system";
+        Response(200, "Provider detail was successfully returned");
     }
 }
 

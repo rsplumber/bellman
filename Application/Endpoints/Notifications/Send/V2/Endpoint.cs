@@ -2,11 +2,14 @@ using Core.Notifications;
 using FastEndpoints;
 using FluentValidation;
 
-namespace Application.Endpoints.V1.Notifications.Send;
+namespace Application.Endpoints.Notifications.Send.V2;
 
-file sealed class Endpoint : Endpoint<SendNotificationWithContent>
+file sealed class Endpoint : Endpoint<SendNotificationWithPatternId>
 {
     private readonly INotificationService _notificationService;
+
+
+    
 
     public Endpoint(INotificationService notificationService)
     {
@@ -17,14 +20,13 @@ file sealed class Endpoint : Endpoint<SendNotificationWithContent>
     {
         Post("notifications/send");
         AllowAnonymous();
-        Version(1);
+        Version(2);
     }
 
-    public override async Task HandleAsync(SendNotificationWithContent req, CancellationToken ct)
+    public override async Task HandleAsync(SendNotificationWithPatternId req, CancellationToken ct)
     {
-        req.Provider = "persiafava";
-        await _notificationService.SendAsync(req, ct);
-        await SendOkAsync(ct);
+        var res = await _notificationService.SendAsync(req, ct);
+        await SendOkAsync(res, ct);
     }
 }
 
@@ -38,7 +40,7 @@ file sealed class EndpointSummary : Summary<Endpoint>
     }
 }
 
-file sealed class RequestValidator : Validator<SendNotificationWithContent>
+file sealed class RequestValidator : Validator<SendNotificationWithPatternId>
 {
     public RequestValidator()
     {
@@ -46,9 +48,9 @@ file sealed class RequestValidator : Validator<SendNotificationWithContent>
             .NotEmpty().WithMessage("Enter Receiver (To)")
             .NotNull().WithMessage("Enter Receiver (To)");
 
-        RuleFor(request => request.Content)
-            .NotEmpty().WithMessage("Enter Content")
-            .NotNull().WithMessage("Enter Content");
+        RuleFor(request => request.PatternId)
+            .NotEmpty().WithMessage("Enter PatternId")
+            .NotNull().WithMessage("Enter PatternId");
 
         RuleFor(request => request.Type)
             .NotEmpty().WithMessage("Enter Provider type")
