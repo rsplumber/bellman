@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Application;
 using Core;
+using Core.Content;
 using Data;
 using Data.InMemory;
 using Elastic.Apm.NetCoreAll;
@@ -9,6 +10,7 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using KunderaNet.FastEndpoints.Authorization;
 using KunderaNet.Services.Authorization.Http;
+using Sms.Jiring;
 using Sms.Magfa;
 using Sms.Persiafava;
 using Sms.Ssmss;
@@ -38,13 +40,27 @@ builder.Services.SwaggerDocument(settings =>
         generatorSettings.AddKunderaAuth();
     };
     settings.EnableJWTBearerAuth = false;
+    settings.MinEndpointVersion = 1;
     settings.MaxEndpointVersion = 1;
+});
+builder.Services.SwaggerDocument(settings =>
+{
+    settings.DocumentSettings = generatorSettings =>
+    {
+        generatorSettings.Title = "Bellman notification center - WebApi";
+        generatorSettings.DocumentName = "v2";
+        generatorSettings.Version = "v2";
+        generatorSettings.AddKunderaAuth();
+    };
+    settings.EnableJWTBearerAuth = false;
+    settings.MinEndpointVersion = 2;
+    settings.MaxEndpointVersion = 2;
 });
 
 builder.Services.AddAuthentication(KunderaDefaults.Scheme)
     .AddKundera(builder.Configuration, k => k.UseHttpService(builder.Configuration));
 builder.Services.AddAuthorization();
-
+builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
 builder.Services.AddCap(options =>
 {
     options.FailedRetryCount = 0;
@@ -52,6 +68,8 @@ builder.Services.AddCap(options =>
     options.JsonSerializerOptions.IgnoreReadOnlyFields = true;
     options.SucceedMessageExpiredAfter = 30;
     options.FailedMessageExpiredAfter = 30;
+    // options.UseInMemoryStorage();
+    // options.UseInMemoryMessageQueue();
     options.UseRabbitMQ(op =>
     {
         op.HostName = builder.Configuration.GetValue<string>("RabbitMQ:HostName") ?? throw new ArgumentNullException("RabbitMQ:HostName", "Enter RabbitMQ:HostName in app settings");
@@ -67,12 +85,14 @@ builder.Services.AddCap(options =>
 });
 
 builder.Services.AddCore(builder.Configuration);
+builder.Services.AddCorePattern(builder.Configuration);
 builder.Services.AddData(builder.Configuration);
 builder.Services.AddInMemoryData();
-builder.Services.AddMagfa(builder.Configuration);
+ builder.Services.AddMagfa(builder.Configuration);
+builder.Services.AddJiring(builder.Configuration);
 builder.Services.AddPersiafava(builder.Configuration);
 builder.Services.AddSsmss(builder.Configuration);
-builder.Services.AddTesEmail(builder.Configuration);
+// builder.Services.AddTesEmail(builder.Configuration);
 
 var app = builder.Build();
 app.UseNotificationCenter(builder.Configuration);
@@ -81,7 +101,7 @@ app.UseCors(b => b.AllowAnyHeader()
     .AllowAnyMethod()
     .SetIsOriginAllowed(_ => true)
     .AllowCredentials());
-
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();

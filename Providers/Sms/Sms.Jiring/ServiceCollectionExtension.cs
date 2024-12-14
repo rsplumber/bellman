@@ -4,19 +4,19 @@ using Core.Content;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Sms.Persiafava;
+namespace Sms.Jiring;
 
 public static class ServiceCollectionExtension
 {
-    public static void AddPersiafava(this IServiceCollection services, IConfiguration configuration)
+    public static void AddJiring(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddProviderPattern<SendNotificationManagement>();
-        services.AddHttpClient("persiafava", c =>
+        services.AddHttpClient("jiring", c =>
         {
-            c.BaseAddress = new Uri("http://sms.persiafava.com");
+            c.BaseAddress = new Uri("https://sms.jiring.ir:8085/");
             c.DefaultRequestHeaders
                 .Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
     }
 }

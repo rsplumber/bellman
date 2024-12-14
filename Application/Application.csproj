@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+<!--        <PackageReference Include="Savorboard.CAP.InMemoryMessageQueue" Version="8.0.0"/>-->
+<!--        <PackageReference Include="DotNetCore.CAP.InMemoryStorage" Version="8.0.1"/>-->
         <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="7.2.2" />
         <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="7.2.2" />
         <PackageReference Include="Elastic.Apm.NetCoreAll" Version="1.25.1" />
@@ -30,10 +32,15 @@
       <ProjectReference Include="..\Data.InMemory\Data.InMemory.csproj" />
       <ProjectReference Include="..\Data.Sql\Data.Sql.csproj" />
       <ProjectReference Include="..\Providers\Email.Tes\Email.Tes.csproj" />
+      <ProjectReference Include="..\Providers\Sms\Sms.Jiring\Sms.Jiring.csproj" />
       <ProjectReference Include="..\Providers\Sms\Sms.Magfa\Sms.Magfa.csproj" />
       <ProjectReference Include="..\Providers\Sms\Sms.Persiafava\Sms.Persiafava.csproj" />
       <ProjectReference Include="..\Providers\Sms\Sms.Ssmss\Sms.Ssmss.csproj" />
       <ProjectReference Include="..\Queries\Queries.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Infrastructure\Migrations\" />
     </ItemGroup>
 
 </Project>

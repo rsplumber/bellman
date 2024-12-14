@@ -1,65 +1,66 @@
-﻿using Core.Events.Pattern;
-using Core.Notifications;
+﻿using Core.Notifications;
 using DotNetCore.CAP;
 
-namespace Core.Events;
+namespace Core.Events.Pattern;
 
-public sealed record SendNotificationEvent
+public sealed record SendNotificationPatternEvent
 {
-    public const string EventName = "bellman.notification.send";
+    public const string EventName = "bellman.notification.pattern.send";
 
     public Guid RequestId { get; set; } = Guid.NewGuid();
 
-    public string? Content { get; init; }
-
     public Guid? PatternId { get; init; }
 
-    public string[]? Parameters { get; init; }
+    public string[] Parameters { get; init; } = [];
+    public string? Content { get; init; }
 
-    public string[] To { get; init; } = Array.Empty<string>();
+    public string To { get; init; } = default!;
 
     public string Provider { get; init; } = default!;
 }
 
-internal sealed class SendNotificationEventHandler : ICapSubscribe
+internal sealed class SendNotificationPatternEventHandler : ICapSubscribe
 {
     private readonly IEnumerable<AbstractNotificationPatternManagement> _notificationManagements;
 
-    public SendNotificationEventHandler(IEnumerable<AbstractNotificationPatternManagement> notificationManagement)
+    public SendNotificationPatternEventHandler(IEnumerable<AbstractNotificationPatternManagement> notificationManagement)
     {
         _notificationManagements = notificationManagement;
     }
 
-    [CapSubscribe("bellman.notification.send.sms.persiafava", Group = "bellman.notification.send.sms.queue")]
+    [CapSubscribe("bellman.notification.pattern.send.sms.*", Group = "bellman.notification.pattern.send.sms.queue")]
     public Task HandleSmsAsync(SendNotificationPatternEvent message)
     {
         var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
 
         return notificationManagement.SendAsync(new SendNotificationWithPatternRequest(message.RequestId)
         {
-            Content = message.Content,
+            PatternId = message.PatternId,
+            Parameters = message.Parameters,
             To = [message.To]
         });
     }
 
-    [CapSubscribe("bellman.notification.send.email.*", Group = "bellman.notification.send.email.queue")]
+    [CapSubscribe("bellman.notification.pattern.send.email.*", Group = "bellman.notification.pattern.send.email.queue")]
     public Task HandleEmailAsync(SendNotificationPatternEvent message)
     {
         var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
         return notificationManagement.SendAsync(new SendNotificationWithPatternRequest(message.RequestId)
         {
-            Content = message.Content,
+            PatternId = message.PatternId,
+            Parameters = message.Parameters,
             To = [message.To]
         });
     }
 
-    [CapSubscribe("bellman.notification.send.push.*", Group = "bellman.notification.send.push.queue")]
+    [CapSubscribe("bellman.notification.pattern.send.push.*", Group = "bellman.notification.pattern.send.push.queue")]
     public Task HandlePushNotificationAsync(SendNotificationPatternEvent message)
     {
         var notificationManagement = _notificationManagements.First(p => p.ProviderName == message.Provider);
         return notificationManagement.SendAsync(new SendNotificationWithPatternRequest(message.RequestId)
         {
-            Content = message.Content,
+            PatternId = message.PatternId,
+            Parameters = message.Parameters,
             To = [message.To]
         });
     }

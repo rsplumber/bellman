@@ -18,13 +18,13 @@ internal static class ApplicationBuilderExtension
             var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             context.Database.Migrate();
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // ignored
+            Console.WriteLine(e);
         }
 
         var providerRepository = serviceScope.ServiceProvider.GetRequiredService<IProviderRepository>();
-        var notificationManagements = serviceScope.ServiceProvider.GetRequiredService<IEnumerable<AbstractNotificationManagement>>();
+        var notificationManagements = serviceScope.ServiceProvider.GetRequiredService<IEnumerable<AbstractNotificationPatternManagement>>();
         foreach (var management in notificationManagements)
         {
             var provider = providerRepository.FindByNameAsync(management.ProviderName).Result;

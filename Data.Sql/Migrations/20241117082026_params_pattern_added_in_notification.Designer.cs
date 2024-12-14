@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241117082026_params_pattern_added_in_notification")]
+    partial class params_pattern_added_in_notification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,7 +26,7 @@ namespace Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Core.Domains.Jirings.Jiring", b =>
+            modelBuilder.Entity("Core.Domains.Jiring.Jiring", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,29 +47,6 @@ namespace Data.Migrations
                     b.ToTable("jirings", "jiring");
                 });
 
-            modelBuilder.Entity("Core.Domains.Jirings.Notification.JiringNotification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("MessageId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("message_id");
-
-                    b.Property<Guid>("notification_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("notification_id")
-                        .IsUnique();
-
-                    b.ToTable("jirings_notifications", "jiring");
-                });
-
             modelBuilder.Entity("Core.Domains.Pattern.Pattern", b =>
                 {
                     b.Property<Guid>("Id")
@@ -77,14 +57,6 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedDateUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date_utc");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Parameters")
-                        .HasColumnType("text")
-                        .HasColumnName("parameters");
 
                     b.Property<string>("Template")
                         .IsRequired()
@@ -111,10 +83,6 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedDateUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date_utc");
-
-                    b.Property<int?>("DeliveryStatus")
-                        .HasColumnType("integer")
-                        .HasColumnName("delivery_status");
 
                     b.Property<string>("From")
                         .IsRequired()
@@ -151,17 +119,6 @@ namespace Data.Migrations
                     b.HasIndex("pattern_id");
 
                     b.ToTable("notifications", (string)null);
-                });
-
-            modelBuilder.Entity("Core.Domains.Jirings.Notification.JiringNotification", b =>
-                {
-                    b.HasOne("Core.Notifications.Notification", "Notification")
-                        .WithOne()
-                        .HasForeignKey("Core.Domains.Jirings.Notification.JiringNotification", "notification_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Notification");
                 });
 
             modelBuilder.Entity("Core.Notifications.Notification", b =>

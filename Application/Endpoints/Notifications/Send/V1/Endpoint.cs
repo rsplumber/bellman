@@ -2,9 +2,9 @@ using Core.Notifications;
 using FastEndpoints;
 using FluentValidation;
 
-namespace Application.Endpoints.V1.Notifications.Send;
+namespace Application.Endpoints.Notifications.Send.V1;
 
-file sealed class Endpoint : Endpoint<SendNotification>
+file sealed class Endpoint : Endpoint<SendNotificationWithContent>
 {
     private readonly INotificationService _notificationService;
 
@@ -20,8 +20,9 @@ file sealed class Endpoint : Endpoint<SendNotification>
         Version(1);
     }
 
-    public override async Task HandleAsync(SendNotification req, CancellationToken ct)
+    public override async Task HandleAsync(SendNotificationWithContent req, CancellationToken ct)
     {
+        req.Provider = "persiafava";
         await _notificationService.SendAsync(req, ct);
         await SendOkAsync(ct);
     }
@@ -37,7 +38,7 @@ file sealed class EndpointSummary : Summary<Endpoint>
     }
 }
 
-file sealed class RequestValidator : Validator<SendNotification>
+file sealed class RequestValidator : Validator<SendNotificationWithContent>
 {
     public RequestValidator()
     {

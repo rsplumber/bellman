@@ -1,7 +1,7 @@
 using FastEndpoints;
 using Queries.Providers;
 
-namespace Application.Endpoints.V1.Providers.List;
+namespace Application.Endpoints.Providers.List;
 
 file sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
 {
