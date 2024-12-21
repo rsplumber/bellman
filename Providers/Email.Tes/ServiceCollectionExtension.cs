@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.Content;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,6 @@ public static class ServiceCollectionExtension
         services
             .AddFluentEmail("app@tes.ir")
             .AddSmtpSender("mail.tes.ir", 25, "card@tes.ir", "Card@123@");
-        services.AddProvider<SendNotificationManagement>();
+        services.AddProviderPattern<SendNotificationManagement>();
     }
 }

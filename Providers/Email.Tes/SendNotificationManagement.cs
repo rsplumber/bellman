@@ -1,17 +1,20 @@
-﻿using Core.Notifications;
+﻿using Core.Domains.Pattern;
+using Core.Notifications;
 using DotNetCore.CAP;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
 
 namespace Emai.Tes;
 
-internal sealed class SendNotificationManagement : AbstractNotificationManagement
+internal sealed class SendNotificationManagement : AbstractNotificationPatternManagement
 {
     private readonly IFluentEmail _fluentEmail;
+    private readonly IPatternRepository _patternRepository;
 
-    public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory, IFluentEmail fluentEmail) : base(capPublisher, notificationRepository)
+    public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory, IFluentEmail fluentEmail, IPatternRepository patternRepository) : base(capPublisher, notificationRepository, patternRepository)
     {
         _fluentEmail = fluentEmail;
+        _patternRepository = patternRepository;
     }
 
     public override string ProviderName => "tes";
@@ -20,35 +23,39 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
 
     protected override int MaximumRetryCount => 0;
 
-    protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken)
+    protected override async Task<SendNotification?> SendNotificationAsync(Notification notification, Guid? patternId, string[]? parameters, string to, string? content, CancellationToken cancellationToken)
     {
+        string contents;
+        if (content is null)
+        {
+            var pattern = await _patternRepository.FindAsync((Guid)patternId!, cancellationToken);
+            contents = string.Format(pattern?.Template ?? string.Empty, parameters.Cast<object>().ToArray());
+        }
+        else
+        {
+            contents = content;
+        }
+
         await _fluentEmail.To(to)
             .Subject("تجارت الکترونیک سرمایه")
-            .Body(content)
+            .Body(contents)
             .SendAsync();
-        return true;
+        return new SendNotification()
+        {
+            MessageId = ""
+        };
     }
 
-    protected override async Task<bool> SendBatchNotificationAsync(string content, string[] to, CancellationToken cancellationToken)
+    protected override Task<GetDeliveryNotification?> GetDeliveryStatusNotificationAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _fluentEmail.To(to.Select(s => new Address
-            {
-                Name = "",
-                EmailAddress = s
-            }))
-            .Subject("تجارت الکترونیک سرمایه")
-            .Body(content)
-            .SendAsync();
-        return true;
+        return Task.FromResult<GetDeliveryNotification?>(new GetDeliveryNotification()
+        {
+            Status = 0
+        });
     }
 
-    protected override Task<bool> SendNotificationAsync(Guid patternId, string[] parameters, string to, CancellationToken cancellationToken)
+    private record TesResponse
     {
-        throw new NotImplementedException();
-    }
-
-    protected override Task<bool> SendBatchNotificationAsync(Guid patternId, string[] parameters, string[] to, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        public string List { get; set; } = default!;
     }
 }
