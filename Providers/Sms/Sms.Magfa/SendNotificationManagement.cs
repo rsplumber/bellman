@@ -1,19 +1,22 @@
 ﻿using System.Net.Http.Json;
+using Core.Domains.Pattern;
 using Core.Notifications;
 using DotNetCore.CAP;
 
 namespace Sms.Magfa;
 
-internal sealed class SendNotificationManagement : AbstractNotificationManagement
+internal sealed class SendNotificationManagement : AbstractNotificationPatternManagement
 {
     private const string Username = "sarmaye_41925";
     private const string Password = "YEfVjZSomtLHIPKW";
     private const string SenderNumber = "98300041925";
     private const string ApiUrl = "http/sms/v2/send";
     private readonly HttpClient _client;
+    private readonly IPatternRepository _patternRepository;
 
-    public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory) : base(capPublisher, notificationRepository)
+    public SendNotificationManagement(ICapPublisher capPublisher, INotificationRepository notificationRepository, IHttpClientFactory clientFactory, IPatternRepository patternRepository) : base(capPublisher, notificationRepository, patternRepository)
     {
+        _patternRepository = patternRepository;
         _client = clientFactory.CreateClient(ProviderName);
         _client.DefaultRequestHeaders.Add("Username", Username);
         _client.DefaultRequestHeaders.Add("Password", Password);
@@ -23,37 +26,48 @@ internal sealed class SendNotificationManagement : AbstractNotificationManagemen
 
     public override string ProviderType => "sms";
 
-    protected override int MaximumRetryCount => 0;
+    protected override int MaximumRetryCount => 1;
 
-    protected override async Task<bool> SendNotificationAsync(string content, string to, CancellationToken cancellationToken = default)
+    protected override async Task<SendNotification?> SendNotificationAsync(Notification notification, Guid? patternId, string[]? parameters, string to, string? content, CancellationToken cancellationToken)
     {
+        string contents;
+        if (content is null)
+        {
+            var pattern = await _patternRepository.FindAsync((Guid)patternId!, cancellationToken);
+            contents = string.Format(pattern?.Template ?? string.Empty, parameters.Cast<object>().ToArray());
+        }
+        else
+        {
+            contents = content;
+        }
+
         var httpResponseMessage = await _client.PostAsJsonAsync(ApiUrl, new
         {
             senders = new List<string> { SenderNumber },
-            messages = new List<string> { content },
-            recipients = new[] { to },
-        }, cancellationToken);
-        return httpResponseMessage.IsSuccessStatusCode;
-    }
-
-    protected override async Task<bool> SendBatchNotificationAsync(string content, string[] to, CancellationToken cancellationToken = default)
-    {
-        var httpResponseMessage = await _client.PostAsJsonAsync(ApiUrl, new
-        {
-            senders = new List<string> { SenderNumber },
-            messages = new List<string> { content },
+            messages = new List<string> { contents },
             recipients = to,
         }, cancellationToken);
-        return httpResponseMessage.IsSuccessStatusCode;
+        if (!httpResponseMessage.IsSuccessStatusCode) return null;
+        var response = await httpResponseMessage.Content.ReadFromJsonAsync<MagfaResponse>(cancellationToken: cancellationToken);
+        if (response is null) return null;
+
+        return new SendNotification()
+        {
+            MessageId = response.List.FirstOrDefault() ?? string.Empty
+        };
     }
 
-    protected override Task<bool> SendNotificationAsync(Guid patternId, string[] parameters, string to, CancellationToken cancellationToken)
+    protected override Task<GetDeliveryNotification?> GetDeliveryStatusNotificationAsync(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return Task.FromResult<GetDeliveryNotification?>(new GetDeliveryNotification()
+        {
+            Status = 0
+        });
     }
 
-    protected override Task<bool> SendBatchNotificationAsync(Guid patternId, string[] parameters, string[] to, CancellationToken cancellationToken)
+
+    private record MagfaResponse
     {
-        throw new NotImplementedException();
+        public List<string> List { get; set; } = default!;
     }
 }
