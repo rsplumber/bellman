@@ -6,6 +6,7 @@ namespace Core.Providers;
 public interface IProviderService
 {
     Task ToggleAsync(string name, CancellationToken cancellationToken = default);
+    Task ActivationAsync(string name, string type, CancellationToken cancellationToken = default);
 }
 
 internal sealed class ProviderService : IProviderService
@@ -33,5 +34,25 @@ internal sealed class ProviderService : IProviderService
         };
 
         await _providerRepository.UpdateAsync(provider, cancellationToken);
+    }
+
+    public async Task ActivationAsync(string name, string type, CancellationToken cancellationToken = default)
+    {
+        var providers = await _providerRepository.FindAsync(cancellationToken);
+
+
+        foreach (var provider in providers.Where(provider => provider.Type == type))
+        {
+            provider.Status = ProviderStatus.Disable;
+            await _providerRepository.UpdateAsync(provider, cancellationToken);
+        }
+
+
+        var targetProvider = await _providerRepository.FindByNameAsync(name, cancellationToken);
+        if (targetProvider != null)
+        {
+            targetProvider.Status = ProviderStatus.Enable;
+            await _providerRepository.UpdateAsync(targetProvider, cancellationToken);
+        }
     }
 }
