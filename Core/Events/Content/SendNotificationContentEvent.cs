@@ -2,9 +2,9 @@
 using Core.Notifications;
 using DotNetCore.CAP;
 
-namespace Core.Events;
+namespace Core.Events.Content;
 
-public sealed record SendNotificationEvent
+public sealed record SendNotificationContentEvent
 {
     public const string EventName = "bellman.notification.send";
 
@@ -21,11 +21,11 @@ public sealed record SendNotificationEvent
     public string Provider { get; init; } = default!;
 }
 
-internal sealed class SendNotificationEventHandler : ICapSubscribe
+internal sealed class SendNotificationContentEventHandler : ICapSubscribe
 {
     private readonly IEnumerable<AbstractNotificationPatternManagement> _notificationManagements;
 
-    public SendNotificationEventHandler(IEnumerable<AbstractNotificationPatternManagement> notificationManagement)
+    public SendNotificationContentEventHandler(IEnumerable<AbstractNotificationPatternManagement> notificationManagement)
     {
         _notificationManagements = notificationManagement;
     }

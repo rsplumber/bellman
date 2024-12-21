@@ -1,6 +1,7 @@
 using Core.Domains.Pattern;
 using Core.Domains.Pattern.Exceptions;
 using Core.Events;
+using Core.Events.Content;
 using Core.Events.Pattern;
 using Core.Notifications.Exceptions;
 using Core.Providers;
@@ -81,7 +82,7 @@ internal sealed class NotificationService : INotificationService
 
         if (provider.Status is not ProviderStatus.Enable) throw new ProviderDisabledException();
 
-        await _eventBus.PublishAsync($"{SendNotificationEvent.EventName}.{provider.Type}.persiafava", new SendNotificationPatternEvent()
+        await _eventBus.PublishAsync($"{SendNotificationContentEvent.EventName}.{provider.Type}.persiafava", new SendNotificationPatternEvent()
         {
             Content = request.Content,
             To = request.To.FirstOrDefault() ?? string.Empty,

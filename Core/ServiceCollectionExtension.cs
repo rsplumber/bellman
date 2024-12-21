@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Core.Events.Content;
 using Core.Notifications;
 using Core.Providers;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ public static class ServiceCollectionExtension
     {
         services.TryAddScoped<NotificationSentEventHandler>();
         services.TryAddScoped<NotificationFailedEventHandler>();
-        services.TryAddScoped<SendNotificationEventHandler>();
+        services.TryAddScoped<SendNotificationContentEventHandler>();
         services.TryAddScoped<INotificationService, NotificationService>();
         services.TryAddScoped<IProviderSelectionService, ProviderSelectionService>();
         services.TryAddScoped<IProviderService, ProviderService>();

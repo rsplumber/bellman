@@ -1,4 +1,5 @@
 ﻿using Core.Events;
+using Core.Events.Content;
 using DotNetCore.CAP;
 
 namespace Core.Notifications;
@@ -99,7 +100,7 @@ public abstract class AbstractNotificationManagement
 
     private async Task RaiseSendEventAsync(SendNotificationRequest req, CancellationToken cancellationToken = default)
     {
-        await _eventBus.PublishAsync($"{SendNotificationEvent.EventName}.{ProviderType}.{ProviderName}", new SendNotificationEvent
+        await _eventBus.PublishAsync($"{SendNotificationContentEvent.EventName}.{ProviderType}.{ProviderName}", new SendNotificationContentEvent
         {
             RequestId = req.Id,
             Content = req.Content,
