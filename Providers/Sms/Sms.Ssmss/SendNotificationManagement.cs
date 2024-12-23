@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using Core.Notifications;
+using Core.Providers.Types;
 using DotNetCore.CAP;
 
 namespace Sms.Ssmss;
@@ -23,6 +24,7 @@ public class SendNotificationManagement : AbstractNotificationManagement
     public override string ProviderName => "ssmss";
 
     public override string ProviderType => "sms";
+    
 
     protected override int MaximumRetryCount => 0;
 

@@ -6,6 +6,7 @@ using Core.Domains.Jirings.Notification;
 using Core.Domains.Pattern;
 using Core.Notifications;
 using Core.Notifications.Types;
+using Core.Providers.Types;
 using DotNetCore.CAP;
 using Newtonsoft.Json;
 
@@ -37,6 +38,10 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
     public override string ProviderName => "jiring";
 
     public override string ProviderType => "sms";
+
+    public override string ProviderTitle => "جیرینگ";
+
+    public override ProviderStatus ProviderStatus => ProviderStatus.Disable;
 
     protected override int MaximumRetryCount => 1;
 
@@ -98,6 +103,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
                 Status = NotificationDeliveryStatus.Unknown
             };
         }
+
         var contentReq = new string[]
         {
             jiring.MessageId
@@ -110,7 +116,7 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
             Content = jsonContent
         };
         var httpResponseMessage = await _client.SendAsync(request, cancellationToken);
-        
+
         if (!httpResponseMessage.IsSuccessStatusCode) return null;
         var response = await httpResponseMessage.Content.ReadFromJsonAsync<JiringDeliveryResponse>(cancellationToken: cancellationToken);
 

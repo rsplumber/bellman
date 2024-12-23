@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Core.Domains.Pattern;
 using Core.Notifications;
+using Core.Providers.Types;
 using DotNetCore.CAP;
 
 namespace Sms.Persiafava;
@@ -23,7 +24,9 @@ public class SendNotificationManagement : AbstractNotificationPatternManagement
     public override string ProviderName => "persiafava";
 
     public override string ProviderType => "sms";
-
+    public override string ProviderTitle => "پرشیا فاوا";
+    
+    public override ProviderStatus ProviderStatus => ProviderStatus.Enable;
     protected override int MaximumRetryCount => 1;
 
     protected override async Task<SendNotification?> SendNotificationAsync(Notification notification, Guid? patternId, string[]? parameters, string to, string? content, CancellationToken cancellationToken)

@@ -20,6 +20,7 @@ internal sealed class ProviderListQuery : IProviderListQuery
             {
                 Name = provider.Name,
                 Type = provider.Type,
+                Title = provider.Title,
                 Status = provider.Status.ToString(),
             }).ToList();
     }

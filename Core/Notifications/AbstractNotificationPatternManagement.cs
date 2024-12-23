@@ -2,6 +2,7 @@
 using Core.Events;
 using Core.Events.Pattern;
 using Core.Notifications.Types;
+using Core.Providers.Types;
 using DotNetCore.CAP;
 
 namespace Core.Notifications;
@@ -22,6 +23,10 @@ public abstract class AbstractNotificationPatternManagement
     public abstract string ProviderName { get; }
 
     public abstract string ProviderType { get; }
+
+    public abstract string ProviderTitle { get; }
+
+    public abstract ProviderStatus ProviderStatus { get; }
 
     protected abstract int MaximumRetryCount { get; }
 

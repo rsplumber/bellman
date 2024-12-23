@@ -37,7 +37,8 @@ internal static class ApplicationBuilderExtension
             {
                 Name = management.ProviderName,
                 Type = management.ProviderType,
-                Status = ProviderStatus.Enable
+                Title = management.ProviderTitle,
+                Status = management.ProviderStatus
             }).Wait();
         }
     }

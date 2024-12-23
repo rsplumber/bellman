@@ -6,5 +6,8 @@ public class ProviderResponse
 
     public string Type { get; init; } = default!;
 
+    public  string Title { get; init; } = default!;
     public string Status { get; init; } = default!;
+    
+    
 }

@@ -9,6 +9,8 @@ public class Provider
     public string Name { get; init; } = default!;
 
     public string Type { get; init; } = default!;
+    
+    public string Title { get; init; } = default!;
 
     public ProviderStatus Status { get; set; } = ProviderStatus.Disable;
 }

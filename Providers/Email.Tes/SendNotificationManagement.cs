@@ -1,5 +1,6 @@
 ﻿using Core.Domains.Pattern;
 using Core.Notifications;
+using Core.Providers.Types;
 using DotNetCore.CAP;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
@@ -20,6 +21,10 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
     public override string ProviderName => "tes";
 
     public override string ProviderType => "email";
+    
+    public override string ProviderTitle => "سرمایه";
+    
+    public override ProviderStatus ProviderStatus => ProviderStatus.Disable;
 
     protected override int MaximumRetryCount => 0;
 
