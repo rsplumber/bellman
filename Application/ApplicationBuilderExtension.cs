@@ -38,6 +38,7 @@ internal static class ApplicationBuilderExtension
                 Name = management.ProviderName,
                 Type = management.ProviderType,
                 Title = management.ProviderTitle,
+                Image = management.ProviderImage,
                 Status = management.ProviderStatus
             }).Wait();
         }

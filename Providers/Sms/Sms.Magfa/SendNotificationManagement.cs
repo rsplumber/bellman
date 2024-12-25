@@ -29,6 +29,8 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
 
     public override string ProviderTitle => "مگفا";
     
+    public override string ProviderImage => "60nFoGAW7EWU0Ovj_-sVQg";
+    
     public override ProviderStatus ProviderStatus => ProviderStatus.Disable;
     protected override int MaximumRetryCount => 1;
 

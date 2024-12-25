@@ -41,6 +41,8 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
 
     public override string ProviderTitle => "جیرینگ";
 
+    public override string ProviderImage => "uBgJHqAh0kGwZfV_KX7PYw";
+
     public override ProviderStatus ProviderStatus => ProviderStatus.Disable;
 
     protected override int MaximumRetryCount => 1;

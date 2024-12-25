@@ -26,6 +26,7 @@ internal sealed class ProviderDetailsQuery : IProviderDetailsQuery
             Name = provider.Name,
             Type = provider.Type,
             Title = provider.Title,
+            Image = provider.Image,
             Status = provider.Status.ToString(),
         };
     }

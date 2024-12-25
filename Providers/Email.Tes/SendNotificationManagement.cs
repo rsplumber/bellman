@@ -23,7 +23,8 @@ internal sealed class SendNotificationManagement : AbstractNotificationPatternMa
     public override string ProviderType => "email";
     
     public override string ProviderTitle => "سرمایه";
-    
+    public override string ProviderImage => "";
+
     public override ProviderStatus ProviderStatus => ProviderStatus.Disable;
 
     protected override int MaximumRetryCount => 0;

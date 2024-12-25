@@ -25,6 +25,7 @@ public class SendNotificationManagement : AbstractNotificationPatternManagement
 
     public override string ProviderType => "sms";
     public override string ProviderTitle => "پرشیا فاوا";
+    public override string ProviderImage => "5t-ZsiB8XESeUgFS1TkhsA";
     
     public override ProviderStatus ProviderStatus => ProviderStatus.Enable;
     protected override int MaximumRetryCount => 1;

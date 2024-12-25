@@ -25,6 +25,8 @@ public abstract class AbstractNotificationPatternManagement
     public abstract string ProviderType { get; }
 
     public abstract string ProviderTitle { get; }
+    
+    public abstract string ProviderImage { get;  }
 
     public abstract ProviderStatus ProviderStatus { get; }
 
