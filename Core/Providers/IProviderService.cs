@@ -38,6 +38,12 @@ internal sealed class ProviderService : IProviderService
 
     public async Task ActivationAsync(string name, string type, CancellationToken cancellationToken = default)
     {
+        var targetProvider = await _providerRepository.FindByNameAsync(name, cancellationToken);
+        if (targetProvider == null)
+        {
+            throw new ProviderNotFoundException();
+        }
+
         var providers = await _providerRepository.FindAsync(cancellationToken);
 
 
@@ -47,12 +53,7 @@ internal sealed class ProviderService : IProviderService
             await _providerRepository.UpdateAsync(provider, cancellationToken);
         }
 
-
-        var targetProvider = await _providerRepository.FindByNameAsync(name, cancellationToken);
-        if (targetProvider != null)
-        {
-            targetProvider.Status = ProviderStatus.Enable;
-            await _providerRepository.UpdateAsync(targetProvider, cancellationToken);
-        }
+        targetProvider.Status = ProviderStatus.Enable;
+        await _providerRepository.UpdateAsync(targetProvider, cancellationToken);
     }
 }
