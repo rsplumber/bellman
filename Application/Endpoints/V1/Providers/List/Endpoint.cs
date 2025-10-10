@@ -22,7 +22,7 @@ file sealed class Endpoint : EndpointWithoutRequest<List<ProviderResponse>>
     public override async Task HandleAsync(CancellationToken ct)
     {
         var responses = await _providerListQuery.QueryAsync(ct);
-        await SendOkAsync(responses, ct);
+        await Send.OkAsync(responses, cancellation: ct);
     }
 }
 

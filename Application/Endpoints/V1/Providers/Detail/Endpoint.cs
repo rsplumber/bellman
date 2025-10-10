@@ -23,7 +23,7 @@ file sealed class Endpoint : Endpoint<Request, ProviderResponse>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         var response = await _providerDetailsQuery.QueryAsync(req.Name, ct);
-        await SendOkAsync(response, ct);
+        await Send.OkAsync(response, cancellation: ct);
     }
 }
 

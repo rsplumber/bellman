@@ -25,7 +25,7 @@ file sealed class Endpoint : Endpoint<Request, ProviderResponse>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         await _providerService.ToggleAsync(req.Name, ct);
-        await SendOkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }
 

@@ -23,7 +23,7 @@ file sealed class Endpoint : Endpoint<SendNotification>
     public override async Task HandleAsync(SendNotification req, CancellationToken ct)
     {
         await _notificationService.SendAsync(req, ct);
-        await SendOkAsync(ct);
+        await Send.OkAsync(cancellation: ct);
     }
 }
 
