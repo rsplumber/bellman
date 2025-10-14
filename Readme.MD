@@ -1,163 +1,126 @@
-# 🔔 Bellman - Smart Notification Service Dispatcher
+# 🔔 Bellman — Smart Notification Service Dispatcher
 
-> A modern, event-driven notification service that intelligently dispatches SMS and email notifications across multiple providers with built-in retry mechanisms, real-time monitoring, and comprehensive logging.
+Bellman is an event‑driven gateway for sending SMS and email notifications. You integrate once with Bellman and it handles provider selection, retries, and delivery tracking across multiple providers.
 
-## ✨ What Bellman Does
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+  - [Local](#local)
+  - [Docker](#docker)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Documentation](#documentation)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
-Bellman acts as a smart mediator between your applications and notification providers. Instead of integrating with each SMS/email service individually, you send one request to Bellman and it automatically:
+## Overview
+Bellman exposes a simple HTTP API. Internally it publishes events (RabbitMQ + CAP) and dispatches to provider implementations.
 
-- ✅ Selects the best available provider
-- 🔄 Handles retries if delivery fails
-- 📊 Tracks delivery status and performance
-- 📱 Supports SMS (Magfa, Persiafava, Ssmss) and Email (Tes)
-- 🔧 Easily extensible for new providers
+Supported providers today:
+- SMS: Magfa, Persiafava, Ssmss
+- Email: Tes
 
-## 🚀 Quick Start
+See `docs/TECHNICAL.md` for architecture and extension points.
 
-### Using Docker (Easiest)
+## Features
+- Smart provider resolution (by type or explicit name)
+- Automatic retries (configurable)
+- Event‑driven processing via RabbitMQ and PostgreSQL event store
+- Observable by design (Elastic APM integration)
+- Simple REST API with Swagger UI
 
+## Prerequisites
+- .NET 9 SDK (for local development)
+- PostgreSQL 15+
+- RabbitMQ 3.x
+
+## Quick Start
+
+### Local
 ```bash
-# 1. Clone and setup
-git clone <your-repo-url>
-cd bellman
+# 1) Start dependencies (Linux/macOS/Windows with Docker)
+docker run -d --name bellman-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:15
+docker run -d --name bellman-rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
-# 2. Start dependencies
-docker run --name postgres -e POSTGRES_PASSWORD=mypassword -d postgres:15
-docker run --name rabbitmq -p 5672:5672 -p 15672:15672 -d rabbitmq:3-management
+# 2) Configure (edit Application/appsettings.Development.json if needed)
+#    Ensure the connection string name is "default" (lowercase)
 
-# 3. Configure and run
-# Edit appsettings.json with your connection strings
+# 3) Run the API
 dotnet run --project Application
 ```
 
-**That's it!** Your API is now running at `http://localhost:5234` with interactive docs at `/swagger`.
+Your API will be available at `http://localhost:5234` with Swagger UI at `/swagger`.
 
-### Manual Setup
+### Docker
+```bash
+# Build image
+docker build -t bellman .
 
-You'll need:
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- [PostgreSQL 15+](https://www.postgresql.org/download)
-- [RabbitMQ 3.12+](https://www.rabbitmq.com/download.html)
+# Run container (configure via env vars)
+docker run --rm -p 5234:5234 \
+  -e ConnectionStrings__default="Host=localhost;Port=5432;Database=bellman;Username=user;Password=password" \
+  -e RabbitMQ__HostName="localhost" \
+  -e RabbitMQ__UserName="guest" \
+  -e RabbitMQ__Password="guest" \
+  -e RabbitMQ__ExchangeName="bellman_exchange" \
+  bellman
+```
 
-## 📡 Send Your First Notification
+## Configuration
+Bellman uses standard .NET configuration (JSON files, environment variables, etc.). Minimal settings:
 
-### Via REST API
+```json
+{
+  "ConnectionStrings": {
+    "default": "Host=localhost;Port=5432;Database=bellman;Username=user;Password=password"
+  },
+  "RabbitMQ": {
+    "HostName": "localhost",
+    "UserName": "guest",
+    "Password": "guest",
+    "ExchangeName": "bellman_exchange"
+  }
+}
+```
+
+Environment variable overrides (examples):
+- `ConnectionStrings__default`
+- `RabbitMQ__HostName`, `RabbitMQ__UserName`, `RabbitMQ__Password`, `RabbitMQ__ExchangeName`
+
+For Elastic APM and other options, see `docs/TECHNICAL.md`.
+
+## Usage
+Send your first notification:
 
 ```bash
 curl -X POST "http://localhost:5234/api/v1/notifications/send" \
   -H "Content-Type: application/json" \
   -d '{
-    "content": "Hello from Bellman! 🚀",
-    "to": ["+989123456789"],
+    "content": "Hello from Bellman!",
+    "to": ["+1234567890"],
     "type": "sms"
   }'
 ```
 
-### Via Swagger UI
+Or open Swagger UI at `http://localhost:5234/swagger`.
 
-1. Open `http://localhost:5234/swagger`
-2. Find the "Send Notification" endpoint
-3. Click "Try it out"
-4. Fill in your message details
-5. Execute!
+## Documentation
+- Technical details, architecture, and provider guides: `docs/TECHNICAL.md`
 
-## 📦 Supported Providers
+## Troubleshooting
+- RabbitMQ: ensure `RabbitMQ:ExchangeName` is set; connectivity to port 5672 must work
+- Connection string: the key must be `ConnectionStrings:default` (lowercase)
+- Port binding: ensure port `5234` is free on your host
 
-| Provider | Type | Region | Status |
-|----------|------|--------|--------|
-| Magfa | SMS | Iran | ✅ Active |
-| Persiafava | SMS | Iran | ✅ Active |
-| Ssmss | SMS | Iran | ✅ Active |
-| Tes | Email | Global | ✅ Active |
+## Contributing
+Contributions are welcome! Please:
+1. Read `docs/TECHNICAL.md` for development setup
+2. Create a feature branch
+3. Add tests where applicable
+4. Open a pull request with a clear description
 
-**Need another provider?** Bellman is designed to be easily extensible. See our [technical docs](docs/TECHNICAL.md) for adding new providers.
-
-## 🏗️ Architecture at a Glance
-
-```
-Your App → Bellman API → Smart Provider Selection → External Provider APIs
-               ↓                    ↓                           ↓
-         Event-Driven        Retry Logic &              Delivery Tracking
-         Processing         Error Handling            Performance Metrics
-```
-
-- **Event-Driven**: Uses RabbitMQ for reliable message processing
-- **Fault-Tolerant**: Automatic retries with configurable policies
-- **Observable**: Real-time monitoring with Elastic APM
-- **Scalable**: Horizontal scaling with Kubernetes support
-
-## 📊 Monitoring & Analytics
-
-Bellman includes comprehensive monitoring out of the box:
-
-- 📈 **Performance Metrics**: Response times, throughput, error rates
-- 🔍 **Distributed Tracing**: Track requests across all services
-- 📋 **Delivery Reports**: Success/failure status for every notification
-- 🎯 **Provider Analytics**: Performance comparison between providers
-
-Access your monitoring dashboard at your Elastic Stack URL.
-
-## 🔧 Configuration
-
-Bellman uses standard .NET configuration. Key settings in `appsettings.json`:
-
-```json
-{
-  "ConnectionStrings": {
-    "Default": "Host=localhost;Port=5432;Database=bellman;Username=user;Password=password"
-  },
-  "RabbitMQ": {
-    "HostName": "localhost",
-    "UserName": "guest",
-    "Password": "guest"
-  },
-  "ElasticApm": {
-    "ServiceName": "Bellman",
-    "ServerUrl": "http://localhost:8200"
-  }
-}
-```
-
-## 🚀 Production Deployment
-
-### Docker Deployment
-
-```bash
-# Build and run
-docker build -t bellman .
-docker run -p 5234:5234 -e ConnectionStrings__Default="..." bellman
-```
-
-### Kubernetes
-
-Bellman is cloud-native and includes Kubernetes manifests for production deployment with auto-scaling, health checks, and rolling updates.
-
-## 📚 Documentation
-
-- **[Technical Documentation](docs/TECHNICAL.md)**: Detailed architecture, API specs, development guides
-- **[API Reference](http://localhost:5234/swagger)**: Interactive API documentation (when running)
-- **Provider Guides**: Integration details for each supported provider
-
-## 🤝 Contributing
-
-We welcome contributions! Whether you're fixing bugs, adding features, or improving documentation:
-
-1. Check our [technical docs](docs/TECHNICAL.md) for development setup
-2. Fork the repository
-3. Create a feature branch
-4. Make your changes with tests
-5. Submit a pull request
-
-## 📄 License
-
-MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙋 Support & Community
-
-- 📧 **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/your-repo/discussions)
-- 📖 **Documentation**: [Technical Docs](docs/TECHNICAL.md)
-
----
-
-**Built with ❤️ using .NET 9, RabbitMQ, and PostgreSQL • [View Technical Details](docs/TECHNICAL.md)**
+## License
+MIT. If missing, add a `LICENSE` file with the MIT license text.
