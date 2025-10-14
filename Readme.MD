@@ -23,7 +23,7 @@ Supported providers today:
 - SMS: Magfa, Persiafava, Ssmss
 - Email: Tes
 
-See `docs/TECHNICAL.md` for architecture and extension points.
+See [docs/TECHNICAL.md](docs/TECHNICAL.md) for architecture and extension points.
 
 ## Features
 - Smart provider resolution (by type or explicit name)
@@ -90,7 +90,7 @@ Environment variable overrides (examples):
 - `ConnectionStrings__default`
 - `RabbitMQ__HostName`, `RabbitMQ__UserName`, `RabbitMQ__Password`, `RabbitMQ__ExchangeName`
 
-For Elastic APM and other options, see `docs/TECHNICAL.md`.
+For Elastic APM and other options, see [docs/TECHNICAL.md](docs/TECHNICAL.md).
 
 ## Usage
 Send your first notification:
@@ -108,7 +108,7 @@ curl -X POST "http://localhost:5234/api/v1/notifications/send" \
 Or open Swagger UI at `http://localhost:5234/swagger`.
 
 ## Documentation
-- Technical details, architecture, and provider guides: `docs/TECHNICAL.md`
+- Technical details, architecture, and provider guides: [docs/TECHNICAL.md](docs/TECHNICAL.md)
 
 ## Troubleshooting
 - RabbitMQ: ensure `RabbitMQ:ExchangeName` is set; connectivity to port 5672 must work
@@ -117,7 +117,7 @@ Or open Swagger UI at `http://localhost:5234/swagger`.
 
 ## Contributing
 Contributions are welcome! Please:
-1. Read `docs/TECHNICAL.md` for development setup
+1. Read [docs/TECHNICAL.md](docs/TECHNICAL.md) for development setup
 2. Create a feature branch
 3. Add tests where applicable
 4. Open a pull request with a clear description
